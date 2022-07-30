@@ -1,0 +1,49 @@
+version: "3.3"
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+
+  web:
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+
+    depends_on:
+      - db
+  redis:
+    image: redis:alpine
+
+
+
+  celery_worker:
+    build:
+      context: .
+
+    image: celery_worker
+    command: celery -A TODOAPP worker -l INFO
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+      - db
+      - web
+
+  celery_beat:
+      build:
+        context: .
+
+      image: celery_beat
+      command: celery -A TODOAPP beat -l INFO
+      env_file:
+        - ./.env
+
+
+      depends_on:
+        - redis
+        - db
+        - web
+
