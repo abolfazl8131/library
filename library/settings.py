@@ -25,12 +25,12 @@ SECRET_KEY = str(os.environ.get("SECRET_KEY"))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str(os.environ.get('DEBUG'))
 
-ALLOWED_HOSTS = [str(os.environ.get("LOCALHOST"))]
+ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
 
 INSTALLED_APPS = [
-    'channels',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,11 +40,8 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_crontab',
     'rest_framework',
-
     'rest_framework.authtoken',
     'rest_framework_swagger',
-
-    'drf_yasg',
     'management',
     'core',
     'customer'
@@ -53,14 +50,7 @@ INSTALLED_APPS = [
 
 ASGI_APPLICATION = 'library.asgi.application'
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [(str(os.environ.get("LOCALHOST")), os.environ.get("REDISPORT"))],
-        },
-    },
-}
+
 
 MIDDLEWARE = [
 
@@ -71,7 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'MiddleWares.user_middlewares.IsActiveMiddleware',
+
     'django.middleware.cache.UpdateCacheMiddleware',
 
     # place all other middlewares here
