@@ -6,12 +6,13 @@ from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIVie
 from rest_framework.permissions import *
 from rest_framework.views import APIView
 from customer.serializers import SignUpSerializer
-from .validators import SignUpValidator
+from .validators import SignUpValidator, IDCodeValidator
+
 
 class SignUp(CreateAPIView):
     serializer_class = SignUpSerializer
 
-    def create(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
 
             data = request.data
             validator = SignUpValidator(data)
@@ -28,5 +29,17 @@ class SignUp(CreateAPIView):
 
 
 
-class Auth(APIView):
+class EnterID(APIView):
+    def post(self, format = None):
+        data = self.request.data
+        validator = IDCodeValidator(data)
+        is_valid = validator.is_valid()
+        if not is_valid == True:
+            return JsonResponse({"error" : is_valid})
+        return JsonResponse({"data" : data})
+
+
+
+class EnterAuthCode(APIView):
     pass
+
