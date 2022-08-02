@@ -1,10 +1,12 @@
+import datetime
+import time
+
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-
-
+from django.utils import timezone
 
 
 class Customer(AbstractBaseUser):
@@ -23,6 +25,9 @@ class Customer(AbstractBaseUser):
 class SignInCode(models.Model):
     code = models.CharField(unique=True, max_length=100, db_index=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    expirationTime = models.DateTimeField('expiration time (of ad)',
+                                          default=timezone.now() + datetime.timedelta(minutes=2))
+
 
 
 

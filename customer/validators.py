@@ -1,6 +1,9 @@
 from customer.models import Customer
+import re
+import datetime
 
 
+# this class does all validation of signup informations
 class SignUpValidator:
     def __init__(self, data):
 
@@ -8,27 +11,47 @@ class SignUpValidator:
         self.first_name = data['first_name']
         self.last_name = data['last_name']
         self.phone_number = data['phone_number']
+        self.email = data["email"]
+        self.birth_date = data['birth_date']
 
     def is_valid(self):
-        statements = { "ID" : self.ID.isdigit(),
-                        "first_name" : self.first_name.isalpha(),
-                        "last_name" : self.last_name.isalpha(),
-                        "phone_number" : self.phone_number.isdigit(),
-                        }
+        statements = {"ID": self.ID.isdigit(),
+                      "first_name": self.first_name.isalpha(),
+                      "last_name": self.last_name.isalpha(),
+                      "phone_number": self.phone_number.isdigit(),
+                      }
         flag = True
         list_of_errors = []
 
+        # validate birthdate
+        try:
+            datetime.datetime.strptime(self.birth_date, '%Y-%m-%d')
+        except ValueError:
+            flag = False
+            list_of_errors.append("Incorrect data format, should be YYYY-MM-DD")
+
+        # validate email address
+        EMAIL_REGEX = re.compile(r"[^@\s]+@[^@\s]+\.[a-zA-Z0-9]+$")
+
+        if not EMAIL_REGEX.match(self.email):
+            flag = False
+            list_of_errors.append("enter a valid email address!")
+
+        # ID validator, if ID is not digit
         if statements['ID'] == False:
             list_of_errors.append("ID is not digit! please enter a valid data")
             flag = False
+
+        # check ID is in DB or not!
         try:
-            if Customer.objects.get(ID = self.ID):
+            if Customer.objects.get(ID=self.ID):
                 flag = False
                 list_of_errors.append("your ID code must be unique in system!")
 
         except:
             pass
 
+        # validate firstname, lastname and phonenumber!
         if statements['first_name'] == False:
             list_of_errors.append("first name must be alpha!")
             flag = False
@@ -50,10 +73,11 @@ class SignUpValidator:
 class IDCodeValidator:
     def __init__(self, data):
         self.ID = data['ID']
+
     def is_valid(self):
         try:
-            if Customer.objects.get(ID = self.ID):
+            if Customer.objects.get(ID=self.ID):
                 return True
         except:
 
-            return ["the customer with this ID code, doesnt exist in database"]
+            return ["the customer with this ID code doesnt exist in database"]

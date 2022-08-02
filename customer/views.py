@@ -6,6 +6,7 @@ from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIVie
 from rest_framework.permissions import *
 from rest_framework.views import APIView
 from customer.serializers import SignUpSerializer
+from .OTP import OTP
 from .validators import SignUpValidator, IDCodeValidator
 
 
@@ -18,7 +19,7 @@ class SignUp(CreateAPIView):
             validator = SignUpValidator(data)
             is_valid = validator.is_valid()
             if is_valid != True:
-                return JsonResponse({"error" : is_valid})
+                return JsonResponse({"error" : is_valid} , 400)
 
             serializer = self.serializer_class(data=data)
             serializer.is_valid()
@@ -35,8 +36,11 @@ class EnterID(APIView):
         validator = IDCodeValidator(data)
         is_valid = validator.is_valid()
         if not is_valid == True:
-            return JsonResponse({"error" : is_valid})
-        return JsonResponse({"data" : data})
+            return JsonResponse({"error" : is_valid} , status=400)
+        sending_type = data['type'] | 1
+        otp = OTP(data , sending_type)
+        otp.choose()
+        return JsonResponse({"data" : "we have sent message"})
 
 
 
