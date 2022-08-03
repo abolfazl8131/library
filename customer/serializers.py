@@ -16,3 +16,9 @@ class SignUpSerializer(serializers.ModelSerializer):
             'date_joined': {'read_only' : True}
         }
 
+
+class GetCustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ['ID','first_name', 'last_name', 'birth_date','email','phone_number' , 'date_joined']
+        
