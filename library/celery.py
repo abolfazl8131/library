@@ -16,7 +16,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     'auto_delete_otp':{
         'task':'customer.tasks.delete_otp',
-        'schedule':1 * 60
+        'schedule': 1*1
     }
 }
 # Load task modules from all registered Django apps.

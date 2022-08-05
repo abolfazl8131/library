@@ -80,4 +80,5 @@ class IDCodeValidator:
                 return True
         except:
 
-            return ["the customer with this ID code doesnt exist in database"]
+            return ["the customer with this ID code doesnt exist in database,,\
+                if you have registered in the system, it maybe happend for poor connection!"]

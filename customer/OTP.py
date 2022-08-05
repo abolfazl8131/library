@@ -26,8 +26,8 @@ class OTP:
         return otp_code
 
     def create(self):
-        obj =  SignInCode.objects.create(customer= self.get_customer() ,
-                                  code = self.generate_code())
+        obj =  SignInCode.objects.create(customer= self.get_customer() ,  code = self.generate_code())
+                                 
         return obj.code
 
 
