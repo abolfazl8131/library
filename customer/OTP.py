@@ -12,10 +12,10 @@ class OTP:
     def choose(self):
 
         if self.type == 1:
-            self.sms()
+            return self.sms()
 
         elif self.type == 2:
-            self.email()
+            return self.email()
 
     def sms(self):
         otp_code = self.create()
@@ -26,9 +26,9 @@ class OTP:
         return otp_code
 
     def create(self):
-        object =  SignInCode.objects.create(customer= self.get_customer() ,
+        obj =  SignInCode.objects.create(customer= self.get_customer() ,
                                   code = self.generate_code())
-        return object.code
+        return obj.code
 
 
     def generate_code(self):
