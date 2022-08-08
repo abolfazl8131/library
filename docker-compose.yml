@@ -24,7 +24,7 @@ services:
       context: .
 
     image: celery_worker
-    command: celery -A TODOAPP worker -l INFO
+    command: celery -A library worker -l INFO
     env_file:
       - ./.env
     depends_on:
@@ -37,7 +37,7 @@ services:
         context: .
 
       image: celery_beat
-      command: celery -A TODOAPP beat -l INFO
+      command: celery -A library beat -l INFO
       env_file:
         - ./.env
 

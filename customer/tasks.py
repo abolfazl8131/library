@@ -1,6 +1,7 @@
 import datetime
 from .models import SignInCode
 from celery import shared_task
+<<<<<<< HEAD
 
 @shared_task
 def delete_otp():
@@ -9,3 +10,30 @@ def delete_otp():
         sign_code.delete()
     except:
         pass
+=======
+from django.utils import timezone
+from pytz import UTC
+from django.conf import settings
+
+@shared_task
+def delete_otp():
+    
+        
+    SignInCode.objects.filter(expirationTime__lte = timezone.now()).delete()
+    print("deleteddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+
+
+
+@shared_task(queue=settings.CELERY_PRIO_QUEUE)    
+def sms(self):
+    otp_code = self.create()
+    return otp_code
+
+@shared_task(queue=settings.CELERY_PRIO_QUEUE) 
+def email(self):
+    otp_code = self.create()
+    return otp_code
+
+       
+    
+>>>>>>> jwt

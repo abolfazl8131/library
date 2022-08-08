@@ -20,13 +20,13 @@ class Customer(AbstractBaseUser):
     email = models.EmailField()
     phone_number = models.CharField(max_length=100)
 
+    USERNAME_FIELD = 'ID'
 
 
 class SignInCode(models.Model):
     code = models.CharField(unique=True, max_length=100, db_index=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    expirationTime = models.DateTimeField('expiration time (of ad)',
-                                          default=timezone.now() + datetime.timedelta(minutes=2))
+    expirationTime = models.DateTimeField()
 
 
 
