@@ -62,11 +62,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'django.middleware.cache.UpdateCacheMiddleware',
+    #'django.middleware.cache.UpdateCacheMiddleware',
 
-    # place all other middlewares here
+    
 
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    #'django.middleware.cache.FetchFromCacheMiddleware',
+    
+    'customer.middlewars.jwt_middleware.JWTMiddleWare',
 
 ]
 
@@ -81,6 +83,10 @@ CELERY_TIMEZONE = str(os.environ.get("CELERY_TIMEZONE"))
 CELERY_CACHE_BACKEND = str(os.environ.get("CELERY_CACHE_BACKEND"))
 
 CELERY_BROKER_URL = str(os.environ.get("CELERY_BROKER_URL"))
+
+CELERY_CREATE_MISSING_QUEUES = True
+
+CELERY_PRIO_QUEUE = 'send-notif-priority-queue'
 
 REST_FRAMEWORK = {
 
@@ -129,7 +135,7 @@ CACHES = {
     }
 }
 
-CACHE_TTL = 60 * 5
+#CACHE_TTL = 60 * 5
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

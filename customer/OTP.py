@@ -1,6 +1,6 @@
 import random
 import string
-
+from .tasks import *
 from customer.models import SignInCode, Customer
 
 
@@ -17,13 +17,12 @@ class OTP:
         elif self.type == 2:
             return self.email()
 
+  
     def sms(self):
-        otp_code = self.create()
-        return otp_code
+        return sms(self)
 
     def email(self):
-        otp_code = self.create()
-        return otp_code
+        return email(self)
 
     def create(self):
         obj =  SignInCode.objects.create(customer= self.get_customer() ,  code = self.generate_code())

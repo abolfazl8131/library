@@ -7,11 +7,12 @@ from rest_framework.permissions import *
 from rest_framework.views import APIView
 from .serializers import *
 from .OTP import OTP
-from .validators import SignUpValidator, IDCodeValidator
+from .validators import SignUpValidator, IDCodeValidator , UpdateCustomerValidator
 from .models import *
 from django.db import transaction
 from .jwt import JsonWebToken
-
+from django.utils.decorators import decorator_from_middleware
+from customer.middlewars.jwt_middleware import JWTMiddleWare
 
 class SignUp(CreateAPIView):
     serializer_class = SignUpSerializer
@@ -36,7 +37,7 @@ class SignUp(CreateAPIView):
 
 class EnterID(APIView):
 
-    @transaction.atomic()
+   
     def post(self, format = None):
 
         data = self.request.data
@@ -63,7 +64,7 @@ class EnterAuthCode(APIView):
 
     serializer_class = GetCustomerSerializer
 
-    @transaction.atomic()
+  
     def post(self , format=None):
 
         try:
@@ -80,6 +81,49 @@ class EnterAuthCode(APIView):
             return JsonResponse({"token" : jwt})
 
         except Exception as e:
-            print(e)
+            
             return JsonResponse({"error":"your code in invalid! mybe expired or wrong!"})
 
+ 
+
+
+class GetProfile(APIView):
+    permission_class = []
+
+    def get(self, request):
+
+        
+        return JsonResponse({
+                'ID':request.customer.ID , 
+                'firstname':request.customer.first_name , 
+                'lastname':request.customer.last_name,
+                'email':request.customer.email, 
+                'phone':request.customer.phone_number,
+                'birthdate':request.customer.birth_date,
+                'date joined':request.customer.date_joined,})
+
+
+class UpdateProfile(UpdateAPIView):
+    serializer_class =  UpdateCustomerSerializer
+    permission_class = []
+
+    def get_queryset(self):
+        ID = self.request.customer.ID
+
+        customer = Customer.objects.get(ID = ID)
+
+        return customer
+
+    def patch(self , request):
+        data = request.data
+        validator = UpdateCustomerValidator(data)
+        is_valid = validator.is_valid()
+
+        if not is_valid == True:
+
+            return JsonResponse({"error" : is_valid} , status=400)
+        
+        serializer = self.serializer_class(self.get_queryset(),data = data , partial = True)
+        serializer.is_valid(raise_exception = True)
+        serializer.save()
+        return JsonResponse(serializer.data , status = 201)

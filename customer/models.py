@@ -20,6 +20,7 @@ class Customer(AbstractBaseUser):
     email = models.EmailField()
     phone_number = models.CharField(max_length=100)
 
+    USERNAME_FIELD = 'ID'
 
 
 class SignInCode(models.Model):
