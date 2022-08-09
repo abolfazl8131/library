@@ -22,8 +22,6 @@ class GetCustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ['ID','first_name', 'last_name', 'birth_date','email','phone_number' , 'date_joined']
         
-<<<<<<< HEAD
-=======
 
 class UpdateCustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,4 +37,4 @@ class UpdateCustomerSerializer(serializers.ModelSerializer):
         instance.phone_number = validated_data.get('phone_number', instance.phone_number)
         instance.save()
         return instance
->>>>>>> jwt
+

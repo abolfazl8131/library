@@ -1,16 +1,6 @@
 import datetime
 from .models import SignInCode
 from celery import shared_task
-<<<<<<< HEAD
-
-@shared_task
-def delete_otp():
-    try:
-        sign_code = SignInCode.objects.get(expirationTime = datetime.datetime.now())
-        sign_code.delete()
-    except:
-        pass
-=======
 from django.utils import timezone
 from pytz import UTC
 from django.conf import settings
@@ -36,4 +26,4 @@ def email(self):
 
        
     
->>>>>>> jwt
+

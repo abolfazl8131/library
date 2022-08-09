@@ -16,7 +16,7 @@ class JWTMiddleWare(MiddlewareMixin):
             token = request.META.get("HTTP_AUTHORIZATION", "")
             
             try:
-                user_ID = jwt.decode(token , key = str(os.environ.get("SECRET_KEY")))['ID']
+                user_ID = jwt.decode(token , key = str(os.environ.get("SECRET_KEY")) , algorithms = ["HS256"])['ID']
                 
                 user_obj = Customer.objects.get(ID = user_ID)
 

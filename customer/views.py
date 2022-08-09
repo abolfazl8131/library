@@ -7,17 +7,17 @@ from rest_framework.permissions import *
 from rest_framework.views import APIView
 from .serializers import *
 from .OTP import OTP
-<<<<<<< HEAD
+
 from .validators import SignUpValidator, IDCodeValidator
 from .models import *
-=======
+
 from .validators import SignUpValidator, IDCodeValidator , UpdateCustomerValidator
 from .models import *
 from django.db import transaction
 from .jwt import JsonWebToken
 from django.utils.decorators import decorator_from_middleware
 from customer.middlewars.jwt_middleware import JWTMiddleWare
->>>>>>> jwt
+
 
 class SignUp(CreateAPIView):
     serializer_class = SignUpSerializer
@@ -29,7 +29,7 @@ class SignUp(CreateAPIView):
             validator = SignUpValidator(data)
             is_valid = validator.is_valid()
             if is_valid != True:
-                return JsonResponse({"error" : is_valid} , 400)
+                return JsonResponse({"error" : is_valid} , status = 400)
 
             serializer = self.serializer_class(data=data)
             serializer.is_valid()
@@ -56,39 +56,25 @@ class EnterID(APIView):
             return JsonResponse({"error" : is_valid} , status=400)
 
         sending_type = data['type'] | 1
-<<<<<<< HEAD
-        otp_obj = OTP(data , sending_type)
-        otp = otp_obj.choose()
-=======
 
         otp_obj = OTP(data , sending_type)
+        otp = otp_obj.choose()
+
+
+        otp_obj = OTP(data , sending_type)
 
         otp = otp_obj.choose()
 
->>>>>>> jwt
+
         return JsonResponse({"data" : otp})
 
 
 
 class EnterAuthCode(APIView):
-<<<<<<< HEAD
-    serializer_class = GetCustomerSerializer
-
-    def post(self , format=None):
-        try:
-            data = self.request.data
-            customer = SignInCode.objects.get(code = data['code']).customer
-        
-            customer = self.serializer_class(customer)
-            return JsonResponse({"user" : customer.data})
-        except:
-            return JsonResponse({"error":"your code in invalid! mybe expired or wrong!"})
-=======
->>>>>>> jwt
 
     serializer_class = GetCustomerSerializer
 
-  
+   
     def post(self , format=None):
 
         try:
@@ -105,7 +91,7 @@ class EnterAuthCode(APIView):
             return JsonResponse({"token" : jwt})
 
         except Exception as e:
-            
+            print(e)
             return JsonResponse({"error":"your code in invalid! mybe expired or wrong!"})
 
  

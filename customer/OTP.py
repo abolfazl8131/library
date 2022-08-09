@@ -25,13 +25,13 @@ class OTP:
         return email(self)
 
     def create(self):
-<<<<<<< HEAD
+
         obj =  SignInCode.objects.create(customer= self.get_customer() ,
                                   code = self.generate_code())
-=======
+
         obj =  SignInCode.objects.create(customer= self.get_customer() ,  code = self.generate_code())
                                  
->>>>>>> jwt
+
         return obj.code
 
 
