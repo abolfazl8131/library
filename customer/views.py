@@ -8,10 +8,9 @@ from rest_framework.views import APIView
 from .serializers import *
 from .OTP import OTP
 
-from .validators import SignUpValidator, IDCodeValidator
 from .models import *
 
-from .validators import SignUpValidator, IDCodeValidator , UpdateCustomerValidator
+from validator.validators import SignUpValidator, IDCodeValidator , UpdateCustomerValidator
 from .models import *
 from django.db import transaction
 from .jwt import JsonWebToken
@@ -27,6 +26,7 @@ class SignUp(CreateAPIView):
 
             data = request.data
             validator = SignUpValidator(data)
+            validator.model = Customer
             is_valid = validator.is_valid()
             if is_valid != True:
                 return JsonResponse({"error" : is_valid} , status = 400)
@@ -137,3 +137,4 @@ class UpdateProfile(UpdateAPIView):
         serializer.is_valid(raise_exception = True)
         serializer.save()
         return JsonResponse(serializer.data , status = 201)
+

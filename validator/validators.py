@@ -5,6 +5,7 @@ import datetime
 
 # this class does all validation of signup informations
 class SignUpValidator:
+    
     def __init__(self, data):
 
         self.ID = data['ID']
@@ -44,7 +45,7 @@ class SignUpValidator:
 
         # check ID is in DB or not!
         try:
-            if Customer.objects.get(ID=self.ID):
+            if self.model.objects.get(ID=self.ID):
                 flag = False
                 list_of_errors.append("your ID code must be unique in system!")
 
@@ -117,16 +118,6 @@ class UpdateCustomerValidator:
             flag = False
             list_of_errors.append("enter a valid email address!")
 
-
-
-        # check ID is in DB or not!
-        try:
-            if Customer.objects.get(ID=self.ID):
-                flag = False
-                list_of_errors.append("your ID code must be unique in system!")
-
-        except:
-            pass
 
         # validate firstname, lastname and phonenumber!
         if statements['first_name'] == False:

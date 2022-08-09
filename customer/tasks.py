@@ -10,7 +10,7 @@ def delete_otp():
     
         
     SignInCode.objects.filter(expirationTime__lte = timezone.now()).delete()
-    print("deleteddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+    
 
 
 
