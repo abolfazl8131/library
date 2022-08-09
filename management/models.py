@@ -1,11 +1,17 @@
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser
+import enum
+from django.utils.translation import gettext_lazy as _
 # Create your models here.
 
 
 
-class Position(models.Model):
-    pos = models.CharField(max_length = 100)
+class Position(models.TextChoices):
+    MASTER = 'MS', _('Master')
+    CASHIER = 'CA', _('Cashier')
+    CLERK = 'CL', _('Clerk')
+        
+
 
 class LibraryAdmin(AbstractBaseUser):
     admin_ID = models.CharField(max_length=100, unique=True, db_index=True , default='SOME STRING')
@@ -17,5 +23,8 @@ class LibraryAdmin(AbstractBaseUser):
     admin_left = models.BooleanField(default=False)
     admin_email = models.EmailField(default='SOME@STRING')
     admin_phone_number = models.CharField(max_length=100 ,default='SOME STRING')
-    admin_position = models.ForeignKey(Position , on_delete = models.PROTECT , default = 0)
+    admin_position = models.CharField(max_length=2, choices=Position.choices, default=Position.CLERK)
+
+    def get_position(self) -> Position :
+        return self.Position[self.admin_position]
    

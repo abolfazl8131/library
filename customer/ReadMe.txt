@@ -1,0 +1,1 @@
+this module its about base works depends on Customer entity, provided the specific authentication for customer

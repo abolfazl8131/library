@@ -44,7 +44,10 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'management',
     'core',
-    'customer'
+    'customer',
+    'book',
+    'authentication'
+   
 
 ]
 
@@ -68,7 +71,7 @@ MIDDLEWARE = [
 
     #'django.middleware.cache.FetchFromCacheMiddleware',
     
-    'customer.middlewars.jwt_middleware.JWTMiddleWare',
+    'middlewars.jwt_middleware.JWTMiddleWare',
 
 ]
 

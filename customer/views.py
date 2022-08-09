@@ -6,16 +6,16 @@ from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIVie
 from rest_framework.permissions import *
 from rest_framework.views import APIView
 from .serializers import *
-from .OTP import OTP
+from authentication.OTP import OTP
 
 from .models import *
 
 from validator.validators import SignUpValidator, IDCodeValidator , UpdateCustomerValidator
 from .models import *
 from django.db import transaction
-from .jwt import JsonWebToken
+from authentication.jwt import JsonWebToken
 from django.utils.decorators import decorator_from_middleware
-from customer.middlewars.jwt_middleware import JWTMiddleWare
+from middlewars.jwt_middleware import JWTMiddleWare
 
 
 class SignUp(CreateAPIView):
@@ -38,63 +38,6 @@ class SignUp(CreateAPIView):
 
 
 
-
-
-class EnterID(APIView):
-
-   
-    def post(self, format = None):
-
-        data = self.request.data
-
-        validator = IDCodeValidator(data)
-
-        is_valid = validator.is_valid()
-
-        if not is_valid == True:
-
-            return JsonResponse({"error" : is_valid} , status=400)
-
-        sending_type = data['type'] | 1
-
-        otp_obj = OTP(data , sending_type)
-        otp = otp_obj.choose()
-
-
-        otp_obj = OTP(data , sending_type)
-
-        otp = otp_obj.choose()
-
-
-        return JsonResponse({"data" : otp})
-
-
-
-class EnterAuthCode(APIView):
-
-    serializer_class = GetCustomerSerializer
-
-   
-    def post(self , format=None):
-
-        try:
-            data = self.request.data
-
-            customer = SignInCode.objects.get(code = data['code']).customer
-        
-            customer = self.serializer_class(customer).data
-
-            jwt = JsonWebToken()
-            
-            jwt = jwt.sign(customer)
-
-            return JsonResponse({"token" : jwt})
-
-        except Exception as e:
-            print(e)
-            return JsonResponse({"error":"your code in invalid! mybe expired or wrong!"})
-
- 
 
 
 class GetProfile(APIView):

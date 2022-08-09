@@ -23,5 +23,3 @@ class DeActivateAdmin(APIView):
 class ActivateAdmin(APIView):
     pass
 
-# what admin do with entities (Customer , CoreModule , BookModule)
-
