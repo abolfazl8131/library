@@ -3,40 +3,35 @@ import re
 import datetime
 
 
-
-
-class IDCodeValidator:
+# this class does all validation of signup informations
+class SignUpValidator:
+    
     def __init__(self, data):
+
         self.ID = data['ID']
-
-    def is_valid(self):
-        try:
-            if Customer.objects.get(ID=self.ID):
-                return True
-        except:
-
-            return ["the customer with this ID code doesnt exist in database,,\
-                if you have registered in the system, it maybe happend for poor connection!"]
-
-
-class UpdateCustomerValidator:
-    def __init__(self, data):
-
-       
         self.first_name = data['first_name']
         self.last_name = data['last_name']
         self.phone_number = data['phone_number']
         self.email = data["email"]
         self.birth_date = data['birth_date']
+        self.position = data['position'] or None
 
     def is_valid(self):
-        statements = {
-                      "first_name": self.first_name.isalpha() or None,
-                      "last_name": self.last_name.isalpha() or None,
-                      "phone_number": self.phone_number.isdigit() or None,
-                    }
+        statements = {"ID": self.ID.isdigit(),
+                      "first_name": self.first_name.isalpha(),
+                      "last_name": self.last_name.isalpha(),
+                      "phone_number": self.phone_number.isdigit(),
+                      }
         flag = True
         list_of_errors = []
+
+        #postiion validator for admin
+        if not self.position==None:
+            if self.position not in ['MS' , 'CA' , 'CL']:
+                flag = False
+                list_of_errors.append("please choose a postion exists in ['MS' , 'CA' , 'CL']")
+            pass
+        pass
 
         # validate birthdate
         try:
@@ -52,6 +47,19 @@ class UpdateCustomerValidator:
             flag = False
             list_of_errors.append("enter a valid email address!")
 
+        # ID validator, if ID is not digit
+        if statements['ID'] == False:
+            list_of_errors.append("ID is not digit! please enter a valid data")
+            flag = False
+
+        # check ID is in DB or not!
+        try:
+            if self.model.objects.get(ID=self.ID):
+                flag = False
+                list_of_errors.append("your ID code must be unique in system!")
+
+        except:
+            pass
 
         # validate firstname, lastname and phonenumber!
         if statements['first_name'] == False:

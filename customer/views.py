@@ -10,7 +10,13 @@ from authentication.OTP import OTP
 
 from .models import *
 
-from validator.validators import SignUpValidator, IDCodeValidator , UpdateCustomerValidator
+
+from validator.signup_validators import SignUpValidator
+
+from validator.update_customer_validator import UpdateCustomerValidator
+
+from validator.ID_unique_validator import IDCodeValidator
+
 from .models import *
 from django.db import transaction
 from authentication.jwt import JsonWebToken

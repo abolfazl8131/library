@@ -13,7 +13,11 @@ from .OTP import OTP
 
 from customer.models import *
 
-from validator.validators import SignUpValidator, IDCodeValidator , UpdateCustomerValidator
+from validator.signup_validators import SignUpValidator
+
+from validator.update_customer_validator import UpdateCustomerValidator
+
+from validator.ID_unique_validator import IDCodeValidator
 
 from django.db import transaction
 from .jwt import JsonWebToken
@@ -74,7 +78,10 @@ class EnterAuthCode(APIView):
 
         except Exception as e:
             print(e)
-            return JsonResponse({"error":"your code in invalid! mybe expired or wrong!"})
+            return JsonResponse({"error":"your code in invalid! mybe expired or wrong!"} , status = 401)
+
+
+
 
  
 
