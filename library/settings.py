@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 
 ASGI_APPLICATION = 'library.asgi.application'
 
+#AUTH_USER_MODEL = 'management.LibraryAdmin'
 
 
 MIDDLEWARE = [

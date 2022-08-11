@@ -14,7 +14,11 @@ class SignUpValidator:
         self.phone_number = data['phone_number']
         self.email = data["email"]
         self.birth_date = data['birth_date']
-        self.position = data['position'] or None
+        try:
+            self.position = data['position']
+        except:
+            self.position = None
+
 
     def is_valid(self):
         statements = {"ID": self.ID.isdigit(),
