@@ -1,0 +1,1 @@
+book entity and methods are declared in this module

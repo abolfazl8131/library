@@ -8,6 +8,7 @@ from .models import *
 from datetime import date
 
 @receiver(pre_save , sender = LibraryAdmin)
-def create_customer(sender,  instance, **kwargs):
+def create_admin(sender,  instance, **kwargs):
     instance.admin_date_joined = date.today()
+    instance.set_password(instance.admin_ID)
 

@@ -1,3 +1,4 @@
+from dataclasses import fields
 from django.http import JsonResponse
 from rest_framework import serializers
 from rest_framework.response import Response
@@ -26,3 +27,15 @@ class SignUpAdminSerializer(serializers.ModelSerializer):
             'phone_number': {'write_only': True},
             'date_joined': {'read_only' : True}
         }
+
+
+class UpdateAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LibraryAdmin
+        fields = ['admin_ID',
+        'admin_first_name', 
+        'admin_last_name', 
+        'admin_birth_date',
+        'admin_email',
+        'admin_phone_number' ,
+        'admin_position']

@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 class LibraryAdminManager(BaseUserManager):
     
-    def _create_user(self, email , password , **extra_fields ):
+    def create_user(self, email , password , **extra_fields ):
 
         print(1111111111111111111111)
       
