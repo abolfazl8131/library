@@ -29,6 +29,8 @@ class LibraryAdminManager(BaseUserManager):
         user.save()
         return user
 
+    
+
 
 
 
@@ -58,6 +60,8 @@ class LibraryAdmin(AbstractBaseUser):
 
     objects = LibraryAdminManager()
 
-    def get_position(self) -> Position :
-        return self.Position[self.admin_position]
+    def get_position(self):
+        return self.admin_position
+
+    
    

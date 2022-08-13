@@ -4,5 +4,8 @@ from .views import *
 
 urlpatterns = [
    path('new-admin/' , SignUpAdmin.as_view()),
-   path('update-admin/' ,UpdateAdmin.as_view())
+   path('update-admin/' ,UpdateAdmin.as_view()),
+   path('delete-admin/',DeleteAdmin.as_view()),
+   path('deactive/' , DeActivateAdmin.as_view()),
+   path('active/' , ActivateAdmin.as_view())
 ]

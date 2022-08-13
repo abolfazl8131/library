@@ -91,8 +91,8 @@ class UpdateAdmin(UpdateAPIView):
        
         return JsonResponse({"data": serializer.data})
 
-class DeleteAdmin(APIView):
-    permission_class = [IsMaster] 
+class DeleteAdmin(DestroyAPIView):
+    permission_classes = [IsMaster] 
 
     def get_object(self):
         
@@ -109,7 +109,7 @@ class DeleteAdmin(APIView):
 
 
 class DeActivateAdmin(APIView):
-    permission_class = [IsMaster]
+    permission_classes = [IsMaster]
 
     def get_object(self):
         
@@ -128,7 +128,7 @@ class DeActivateAdmin(APIView):
 
 
 class ActivateAdmin(APIView):
-    permission_class = [IsMaster]
+    permission_classes = [IsMaster]
     def get_object(self):
         
         try:
@@ -144,3 +144,19 @@ class ActivateAdmin(APIView):
         return JsonResponse({"data":obj.is_active} , status = 200)
     
 
+#########################################################################################################################################################
+
+# the methods will be declared on shared_views module!
+
+
+class OverallViewOnAdmins():
+    pass
+
+class OverallViewOnCustomers():
+    pass
+
+class OverallViewOnBooks():
+    pass
+
+class OverallViewOnLoans():
+    pass
