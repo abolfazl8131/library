@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser , BaseUserManager
 import enum
 from django.utils.translation import gettext_lazy as _
+from datetime import date
 # Create your models here.
 
 class LibraryAdminManager(BaseUserManager):
@@ -53,6 +54,7 @@ class LibraryAdmin(AbstractBaseUser):
     admin_email = models.EmailField(default='SOME@STRING')
     admin_phone_number = models.CharField(max_length=100 ,default='SOME STRING')
     admin_position = models.CharField(max_length=2, choices=Position.choices, default=Position.CLERK)
+    admin_is_active = models.BooleanField(default=True)
 
    
 
@@ -62,6 +64,10 @@ class LibraryAdmin(AbstractBaseUser):
 
     def get_position(self):
         return self.admin_position
+
+    def leave(self):
+        self.admin_left = True
+        self.admin_date_left =  date.today()
 
     
    

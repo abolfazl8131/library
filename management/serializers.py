@@ -39,3 +39,19 @@ class UpdateAdminSerializer(serializers.ModelSerializer):
         'admin_email',
         'admin_phone_number' ,
         'admin_position']
+
+
+class GetAdminListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LibraryAdmin
+        fields = ['admin_ID',
+        'admin_first_name', 
+        'admin_last_name', 
+        'admin_birth_date',
+        'admin_date_joined',
+        'admin_date_left',
+        'admin_email',
+        'admin_phone_number' ,
+        'admin_is_active',
+        'admin_left',
+        'admin_position']

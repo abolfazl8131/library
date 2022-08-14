@@ -1,16 +1,16 @@
 from rest_framework import permissions
 
 
-class IsMaster(permissions.BasePermission):
+class IsActive(permissions.BasePermission):
 
     
 
     def has_permission(self, request, view):
-        if request.user.get_position()== 'MS':
+        if request.user.admin_is_active == True:
             
-            print(request.user.get_position())
+            
             return True
       
         return False
 
-  
+   

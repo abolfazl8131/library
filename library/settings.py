@@ -71,7 +71,7 @@ MIDDLEWARE = [
 
     
 
-    #'django.middleware.cache.FetchFromCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     
     'middlewars.jwt_middleware.JWTMiddleWare',
 
@@ -135,15 +135,16 @@ WSGI_APPLICATION = 'library.wsgi.application'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": str(os.environ.get("CELERY_BROKER_URL")),
+        "LOCATION": "redis://127.0.0.1:6379/1",
         "OPTIONS": {
+            
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
         },
         "KEY_PREFIX": "example"
     }
 }
 
-#CACHE_TTL = 60 * 5
+CACHE_TTL = 5* 60
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
