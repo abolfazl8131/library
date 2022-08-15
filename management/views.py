@@ -4,6 +4,7 @@ from rest_framework import status
 from wsgiref.validate import validator
 from django.shortcuts import render
 from django.http import Http404
+from shared_queries.get_objects_by_params import GetObjectsByParams
 from validator.signup_validators import SignUpValidator
 from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView, ListAPIView
 from validator.update_customer_validator import UpdateCustomerValidator
@@ -22,7 +23,7 @@ from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
+from shared_queries.advaned_data_query import *
 from django.contrib.auth import get_user_model
 LibraryAdmin = get_user_model()
 # what master do with admin
@@ -179,20 +180,60 @@ class LeaveAdmin(APIView):
 
 class OverallViewOnAdmins(RetrieveAPIView):
     serializer_class = GetAdminListSerializer
-    ppermission_classes = permissions
+    permission_classes = permissions
 
   
     def get_queryset(self):
+
         query = GetAllObjects(LibraryAdmin)
-        
         return query.get_all()
+
+    def get_object(self , **kwargs):
+
+        query = GetObjectsByParams(LibraryAdmin)
+        return query.get_object(**kwargs)
 
     @method_decorator(cache_page(CACHE_TTL))
     def get(self, request,*args,**kwargs):
+
+        data = request.GET.get
+
+        admin_ID = data("ID")
+
+        if not admin_ID == "":
+
+            obj = self.get_object(admin_ID = admin_ID)  
+           
+            serializer = self.serializer_class(obj , many=False) 
+            
+            return JsonResponse({"admin":serializer.data})
+
         query = self.get_queryset()
+
         serializer = self.serializer_class(query , many = True)
+        
         return JsonResponse({"data":serializer.data})
 
+
+class FilterAdmins(ListAPIView):
+    serializer_class = GetAdminListSerializer
+    permission_classes = permissions
+
+    def get_queryset(self , **kwargs):
+
+        qs = AdvancedDataQuery(LibraryAdmin)
+
+        return qs.query(**kwargs)
+
+    def get(self, request):
+
+        params = request.GET
+
+        qs = self.get_queryset(**params.lists())
+
+        serializer = self.serializer_class(qs , many = True)
+
+        return JsonResponse({"data":serializer.data})
 
 class OverallViewOnCustomers():
     pass

@@ -144,7 +144,7 @@ CACHES = {
     }
 }
 
-CACHE_TTL = 5* 60
+CACHE_TTL = 1* 3
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

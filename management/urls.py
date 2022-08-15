@@ -9,5 +9,6 @@ urlpatterns = [
    path('deactive/' , DeActivateAdmin.as_view()),
    path('active/' , ActivateAdmin.as_view()),
    path('over-all-admin-views/' , OverallViewOnAdmins.as_view()),
-   path('leave-admin/' , LeaveAdmin.as_view())
+   path('leave-admin/' , LeaveAdmin.as_view()),
+   path('query-admin/',FilterAdmins.as_view())
 ]
