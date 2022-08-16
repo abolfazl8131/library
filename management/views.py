@@ -223,13 +223,18 @@ class FilterAdmins(ListAPIView):
 
         qs = AdvancedDataQuery(LibraryAdmin)
 
-        return qs.query(**kwargs)
+        return qs.admin_query(**kwargs)
 
     def get(self, request):
 
-        params = request.GET
+        query_params = request.GET
 
-        qs = self.get_queryset(**params.lists())
+        params = dict(query_params.lists())
+
+        for k,v in params.items():
+            params[k] = v[0]
+
+        qs = self.get_queryset(**params)
 
         serializer = self.serializer_class(qs , many = True)
 

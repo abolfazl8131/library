@@ -5,14 +5,16 @@ class AdvancedDataQuery:
     def __init__(self , model:models.Model) -> None:
         self.model = model
 
-    def query(self , **kwargs) -> QuerySet:
+    def admin_query(self , **kwargs) -> QuerySet:
        
-        for k, v in kwargs.items():
-            if v != "":
-                kwargs.pop(k)
-            pass
+        for k, v in list(kwargs.items()):
+            if v == "":
+               kwargs.pop(k)
+            else:
+                pass
+            
         
-        qs = self.model.objects.filter(kwargs)
+        qs = self.model.objects.filter(**kwargs)
 
         return qs
 
