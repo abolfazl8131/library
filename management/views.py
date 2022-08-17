@@ -5,6 +5,7 @@ from wsgiref.validate import validator
 from django.shortcuts import render
 from django.http import Http404
 from shared_queries.get_objects_by_params import GetObjectsByParams
+from validator.admin_query_validator import AdminQueryValidator
 from validator.signup_validators import SignUpValidator
 from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView, ListAPIView
 from validator.update_customer_validator import UpdateCustomerValidator
@@ -233,6 +234,11 @@ class FilterAdmins(ListAPIView):
 
         for k,v in params.items():
             params[k] = v[0]
+        validator = AdminQueryValidator(params)
+
+        is_valid = validator.is_valid()
+        if not is_valid == True:
+            return JsonResponse({"error":is_valid} , status = 400)
 
         qs = self.get_queryset(**params)
 
