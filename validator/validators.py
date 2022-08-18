@@ -101,6 +101,7 @@ class AdminQueryInterface:
 
        
     def is_valid(self):
+
         self.admin_date_joined__gte_validator()
         self.admin_birth_date__in_validator()
         self.admin_date_joined__lte_validator()
@@ -109,6 +110,7 @@ class AdminQueryInterface:
         self.admin_is_active_validator()
         self.admin_position_validator()
         self.admin_left_validator()
+
         if self.flag == False:
             return self.list_of_errors
         return True
@@ -139,7 +141,7 @@ class AdminQueryInterface:
     def admin_left_validator(self):
         data = self.data['admin_left']
         if data != "":
-            if isinstance(data , bool):
+            if not isinstance(data , bool):
                 self.flag = False
                 self.list_of_errors.append("admin left is boolean (True or False)")
         pass
@@ -163,7 +165,7 @@ class AdminQueryInterface:
         pass
 
     def admin_birth_date__in_validator(self):
-        data = self.data['admin_birth_date__in']
+        data = self.data['admin_birth_date']
         if data != "":
             try:
                 datetime.datetime.strptime(data, '%Y-%m-%d')
@@ -192,5 +194,100 @@ class AdminQueryInterface:
                 self.list_of_errors.append("please choose a position in [MS , CL , CA]")
         pass
 
+
+
+
+
+
+
+class CustomerQueryInterface:
+    flag = True
+    list_of_errors = []
+
+    def __init__(self , data:dict) -> None:
+        self.data = data
+
+       
+    def is_valid(self):
+        self.date_joined__gte_validator()
+        self.date_joined__lte_validator()
+
+
+        self.date_left__gte_validator()
+        self.date_left__lte_validator()
+       
+        self.birthdate__in_validator()
+        self.left_validator()
+
+        if self.flag == False:
+            return self.list_of_errors
+        return True
+
+    def birthdate__in_validator(self):
+        data = self.data['birth_date']
+        if data != "":
+            try:
+                datetime.datetime.strptime(data, '%Y-%m-%d')
+            except ValueError:
+                self.flag = False
+                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (birth date in)")
+        pass
+
+    def date_joined__gte_validator(self):
+        data = self.data['date_joined__gte']
+        if data != "":
+            try:
+                datetime.datetime.strptime(data, '%Y-%m-%d')
+            except ValueError:
+                self.flag = False
+                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date joined gte)")
+        pass
+
+
+
+    
+    def date_joined__lte_validator(self):
+        data = self.data['date_joined__lte']
+        if data != "":
+            try:
+                datetime.datetime.strptime(data, '%Y-%m-%d')
+            except ValueError:
+                self.flag = False
+                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date joined lte)")
+        pass
+
+    def left_validator(self):
+        data = self.data['left']
+        if data != "":
+            if not isinstance(data , bool) == False:
+                self.flag = False
+                self.list_of_errors.append("admin left is boolean (True or False)")
+        pass
+
+  
+
+    def date_left__lte_validator(self):
+        data = self.data['date_left__lte']
+        if data != "":
+            try:
+                datetime.datetime.strptime(data, '%Y-%m-%d')
+            except ValueError:
+                self.flag = False
+                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date left lte)")
+        pass
+
+   
+    def date_left__gte_validator(self):
+        data = self.data['date_left__gte']
+
+        if data != "":
+            try:
+                datetime.datetime.strptime(data, '%Y-%m-%d')
+            except ValueError:
+                self.flag = False
+                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date left gte)")
+        pass
+
+   
 
     

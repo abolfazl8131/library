@@ -25,6 +25,7 @@ from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from shared_queries.advaned_data_query import *
+from validator.customer_query_validator import *
 from django.contrib.auth import get_user_model
 LibraryAdmin = get_user_model()
 # what master do with admin
@@ -287,8 +288,37 @@ class OverallViewOnCustomers(APIView):
 
         
 
-class CustomerFilter():
-    pass
+class CustomerFilter(APIView):
+    permission_classes = permissions
+
+    serializer_class = GetCustomerSerializer
+
+    def get_queryset(self , **kwargs):
+
+        qs = AdvancedDataQuery(Customer)
+
+        return qs.data_query(**kwargs)
+
+    def get(self , request):
+        query_params = request.GET
+
+        params = dict(query_params.lists())
+
+        for k,v in params.items():
+            params[k] = v[0]
+        
+        validator = CustomerQueryValidator(params)
+        
+        is_valid = validator.is_valid()
+        if not is_valid == True:
+            return JsonResponse({"error":is_valid} , status = 400)
+
+        qs = self.get_queryset(**params)
+
+        serializer = self.serializer_class(qs , many = True)
+
+        return JsonResponse({"data":serializer.data})
+
 
 class OverallViewOnBooks():
     permission_classes = permissions
