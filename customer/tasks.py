@@ -5,6 +5,7 @@ from django.utils import timezone
 from pytz import UTC
 from django.conf import settings
 
+
 @shared_task
 def delete_otp():
     

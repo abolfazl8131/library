@@ -3,7 +3,8 @@
 FROM python:3.9.6
 
 # set work directory
-
+RUN mkdir /code
+COPY ./code /code
 WORKDIR /code
 # set environment variables
 
@@ -19,6 +20,14 @@ COPY requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
+
+COPY ./compose/local/django/celery/worker/start /start-celeryworker
+RUN sed -i 's/\r$//g' /start-celeryworker
+RUN chmod +x /start-celeryworker
+
+COPY ./compose/local/django/celery/beat/start /start-celerybeat
+RUN sed -i 's/\r$//g' /start-celerybeat
+RUN chmod +x /start-celerybeat
 # copy project
 COPY . .
 

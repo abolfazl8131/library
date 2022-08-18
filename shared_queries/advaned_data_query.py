@@ -1,3 +1,4 @@
+
 from django.db import models
 from django.db.models.query import QuerySet
 
@@ -5,7 +6,7 @@ class AdvancedDataQuery:
     def __init__(self , model:models.Model) -> None:
         self.model = model
 
-    def admin_query(self , **kwargs) -> QuerySet:
+    def data_query(self , **kwargs) -> QuerySet:
        
         for k, v in list(kwargs.items()):
             if v == "":

@@ -1,7 +1,7 @@
 from django.db import models
 from django.http import Http404
 
-class GetObjectsByParams:
+class GetObjectByParams:
     def __init__(self , model:models.Model):
         self.model = model
 
@@ -9,6 +9,7 @@ class GetObjectsByParams:
         try:
            
             obj = self.model.objects.get(**kwargs)
+            print(obj)
             return obj
         
         except: 

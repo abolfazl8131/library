@@ -23,7 +23,7 @@ class JWTMiddleWare(MiddlewareMixin):
                 request.customer  = user_obj
 
             except Exception as e:
-                print(e)
+                
                 return JsonResponse({'error':'jwt expired!'} , status = 401)
         else:
             pass

@@ -4,7 +4,7 @@ from rest_framework import status
 from wsgiref.validate import validator
 from django.shortcuts import render
 from django.http import Http404
-from shared_queries.get_objects_by_params import GetObjectsByParams
+from shared_queries.get_object_by_params import GetObjectByParams
 from validator.admin_query_validator import AdminQueryValidator
 from validator.signup_validators import SignUpValidator
 from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView, ListAPIView
@@ -186,12 +186,12 @@ class OverallViewOnAdmins(RetrieveAPIView):
   
     def get_queryset(self):
 
-        query = GetAllObjects(LibraryAdmin)
+        query = GetObjects(LibraryAdmin)
         return query.get_all()
 
     def get_object(self , **kwargs):
 
-        query = GetObjectsByParams(LibraryAdmin)
+        query = GetObjectByParams(LibraryAdmin)
         return query.get_object(**kwargs)
 
     @method_decorator(cache_page(CACHE_TTL))
@@ -224,8 +224,9 @@ class FilterAdmins(ListAPIView):
 
         qs = AdvancedDataQuery(LibraryAdmin)
 
-        return qs.admin_query(**kwargs)
-
+        return qs.data_query(**kwargs)
+    
+    @method_decorator(cache_page(CACHE_TTL))
     def get(self, request):
 
         query_params = request.GET
@@ -246,11 +247,67 @@ class FilterAdmins(ListAPIView):
 
         return JsonResponse({"data":serializer.data})
 
-class OverallViewOnCustomers():
+from customer.serializers import *
+
+class OverallViewOnCustomers(APIView):
+    permission_classes = permissions
+
+    serializer_class = GetCustomerSerializer
+
+    def get_queryset(self):
+        qs = GetObjects(Customer)
+        qs = qs.get_all()
+        return qs
+
+    def get_object(self , **kwargs):
+        obj = GetObjectByParams(Customer)
+        obj = obj.get_object(**kwargs)
+        return obj
+
+    def get(self , request):
+
+        data = request.GET.get
+
+        customer_ID = data("ID")
+
+        if not customer_ID == "":
+
+            obj = self.get_object(ID = customer_ID)  
+           
+            serializer = self.serializer_class(obj , many=False) 
+            
+            return JsonResponse({"customer":serializer.data})
+
+        query = self.get_queryset()
+
+        serializer = self.serializer_class(query , many = True)
+        
+        return JsonResponse({"data":serializer.data})
+
+
+        
+
+class CustomerFilter():
     pass
 
 class OverallViewOnBooks():
+    permission_classes = permissions
+
+    def get_queryset(self):
+        pass
+
+    def get(self , request):
+        pass
+
+class BookFilter():
     pass
 
-class OverallViewOnLoans():
-    pass
+class LoanFilter():
+    permission_classes = permissions
+
+    def get_queryset(self):
+        pass
+
+    def get(self , request):
+        pass
+
