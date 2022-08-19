@@ -9,10 +9,10 @@ from datetime import date
 
 @receiver(pre_save , sender = LibraryAdmin)
 def create_admin(sender,  instance, **kwargs):
-    if not instance.admin_date_joined:
-        instance.admin_date_joined = date.today()
+    if not instance.date_joined:
+        instance.date_joined = date.today()
     if not instance.password:
-        instance.set_password(instance.admin_ID)
+        instance.set_password(instance.ID)
     
 
 

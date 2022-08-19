@@ -48,19 +48,9 @@ class SignUpAdmin(APIView):
 
             return JsonResponse({"error" : is_valid} , status = 400)
 
-        serializer_data = {
+        
 
-            "admin_ID" : data["ID"] , 
-            "admin_first_name" : data['first_name'] ,
-            "admin_last_name": data['last_name'] , 
-            "admin_email":data['email'] , 
-            "admin_birth_date":data['birth_date'],
-            "admin_phone_number":data['phone_number'] , 
-            "admin_position":data['position']
-
-        }
-
-        serializer = self.serializer_class(data = serializer_data)
+        serializer = self.serializer_class(data = data)
 
         serializer.is_valid(raise_exception = True)
 
@@ -76,7 +66,7 @@ class UpdateAdmin(UpdateAPIView):
 
     def get_object(self):
         try:
-            _object = LibraryAdmin.objects.get(admin_ID = self.request.GET.get('ID'))
+            _object = LibraryAdmin.objects.get(ID = self.request.GET.get('ID'))
             return _object
         except:
             raise Http404
@@ -88,19 +78,8 @@ class UpdateAdmin(UpdateAPIView):
         
         if not is_valid == True:
             return JsonResponse({"error": is_valid} , status = 400)
-        serializer_data = {
-
-            "admin_ID" : data["ID"] , 
-            "admin_first_name" : data['first_name'] ,
-            "admin_last_name": data['last_name'] , 
-            "admin_email":data['email'] , 
-            "admin_birth_date":data['birth_date'],
-            "admin_phone_number":data['phone_number'] , 
-            "admin_position":data['position']
-
-        }
-
-        serializer = self.serializer_class(self.get_object(),data = serializer_data)
+    
+        serializer = self.serializer_class(self.get_object(),data = data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
        
@@ -112,7 +91,7 @@ class DeleteAdmin(DestroyAPIView):
     def get_object(self):
         
         try:
-            _object = LibraryAdmin.objects.get(admin_ID = self.request.GET.get('ID'))
+            _object = LibraryAdmin.objects.get(ID = self.request.GET.get('ID'))
             return _object
         except:
             raise Http404
@@ -129,16 +108,16 @@ class DeActivateAdmin(APIView):
     def get_object(self):
         
         try:
-            _object = LibraryAdmin.objects.get(admin_ID = self.request.GET.get('ID'))
+            _object = LibraryAdmin.objects.get(ID = self.request.GET.get('ID'))
             return _object
         except:
             raise Http404
 
     def post(self , request):
         obj = self.get_object()
-        obj.admin_is_active = False
+        obj.is_active = False
         obj.save()
-        return JsonResponse({"data":obj.admin_is_active} , status = 200)
+        return JsonResponse({"data":obj.is_active} , status = 200)
     
 
 
@@ -148,30 +127,30 @@ class ActivateAdmin(APIView):
     def get_object(self):
         
         try:
-            _object = LibraryAdmin.objects.get(admin_ID = self.request.GET.get('ID'))
+            _object = LibraryAdmin.objects.get(ID = self.request.GET.get('ID'))
             return _object
         except:
             raise Http404
 
     def post(self , request):
         obj = self.get_object()
-        obj.admin_is_active = True
+        obj.is_active = True
         obj.save()
-        return JsonResponse({"data":obj.admin_is_active} , status = 200)
+        return JsonResponse({"data":obj.is_active} , status = 200)
 
 class LeaveAdmin(APIView):
     permission_classes = permissions
 
     def get_object(self , ID):
 
-        obj = LibraryAdmin.objects.get(admin_ID = ID)
+        obj = LibraryAdmin.objects.get(ID = ID)
         return obj
 
     def post(self, request):
         obj = self.get_object(request.GET.get('ID'))
         obj.leave()
         obj.save()
-        return JsonResponse({'data':obj.admin_left})
+        return JsonResponse({'data':obj.left})
 
         
 
@@ -200,11 +179,11 @@ class OverallViewOnAdmins(RetrieveAPIView):
 
         data = request.GET.get
 
-        admin_ID = data("ID")
+        ID = data("ID")
 
-        if not admin_ID == "":
+        if not ID == "":
 
-            obj = self.get_object(admin_ID = admin_ID)  
+            obj = self.get_object(ID = ID)  
            
             serializer = self.serializer_class(obj , many=False) 
             

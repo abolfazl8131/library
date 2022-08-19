@@ -3,7 +3,7 @@ import datetime
 import re
 from sys import flags
 
-class AdminFieldsValidator:
+class AbstractFieldsValidator:
     flag = True
     list_of_errors = []
     
@@ -92,7 +92,7 @@ class AdminFieldsValidator:
 
 
 
-class AdminQueryInterface:
+class AbstractQueryInterface:
     flag = True
     list_of_errors = []
 
@@ -116,124 +116,6 @@ class AdminQueryInterface:
         return True
 
     def admin_date_joined__gte_validator(self):
-        data = self.data['admin_date_joined__gte']
-        if data != "":
-            try:
-                datetime.datetime.strptime(data, '%Y-%m-%d')
-            except ValueError:
-                self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date joined gte)")
-        pass
-
-
-
-    
-    def admin_date_joined__lte_validator(self):
-        data = self.data['admin_date_joined__lte']
-        if data != "":
-            try:
-                datetime.datetime.strptime(data, '%Y-%m-%d')
-            except ValueError:
-                self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date joined lte)")
-        pass
-
-    def admin_left_validator(self):
-        data = self.data['admin_left']
-        if data != "":
-            if not isinstance(data , bool):
-                self.flag = False
-                self.list_of_errors.append("admin left is boolean (True or False)")
-        pass
-
-    def admin_is_active_validator(self):
-        data = self.data['admin_is_active']
-        if data != "":
-            if isinstance(data , bool) == False:
-                self.flag = False
-                self.list_of_errors.append("is active is boolean data (True or False)")
-        pass
-
-    def admin_date_left__lte_validator(self):
-        data = self.data['admin_date_left__lte']
-        if data != "":
-            try:
-                datetime.datetime.strptime(data, '%Y-%m-%d')
-            except ValueError:
-                self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date left lte)")
-        pass
-
-    def admin_birth_date__in_validator(self):
-        data = self.data['admin_birth_date']
-        if data != "":
-            try:
-                datetime.datetime.strptime(data, '%Y-%m-%d')
-            except ValueError:
-                self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin birth date)")
-        pass
-
-    def admin_date_left__gte_validator(self):
-        data = self.data['admin_date_left__gte']
-
-        if data != "":
-            try:
-                datetime.datetime.strptime(data, '%Y-%m-%d')
-            except ValueError:
-                self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date left gte)")
-        pass
-
-    def admin_position_validator(self):
-        data = self.data['admin_position']
-
-        if data != "":
-            if data not in ['MS' , 'CL' , 'CA']:
-                self.flag = False
-                self.list_of_errors.append("please choose a position in [MS , CL , CA]")
-        pass
-
-
-
-
-
-
-
-class CustomerQueryInterface:
-    flag = True
-    list_of_errors = []
-
-    def __init__(self , data:dict) -> None:
-        self.data = data
-
-       
-    def is_valid(self):
-        self.date_joined__gte_validator()
-        self.date_joined__lte_validator()
-
-
-        self.date_left__gte_validator()
-        self.date_left__lte_validator()
-       
-        self.birthdate__in_validator()
-        self.left_validator()
-
-        if self.flag == False:
-            return self.list_of_errors
-        return True
-
-    def birthdate__in_validator(self):
-        data = self.data['birth_date']
-        if data != "":
-            try:
-                datetime.datetime.strptime(data, '%Y-%m-%d')
-            except ValueError:
-                self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (birth date in)")
-        pass
-
-    def date_joined__gte_validator(self):
         data = self.data['date_joined__gte']
         if data != "":
             try:
@@ -246,7 +128,7 @@ class CustomerQueryInterface:
 
 
     
-    def date_joined__lte_validator(self):
+    def admin_date_joined__lte_validator(self):
         data = self.data['date_joined__lte']
         if data != "":
             try:
@@ -256,17 +138,23 @@ class CustomerQueryInterface:
                 self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date joined lte)")
         pass
 
-    def left_validator(self):
+    def admin_left_validator(self):
         data = self.data['left']
         if data != "":
-            if not isinstance(data , bool) == False:
+            if not isinstance(data , bool):
                 self.flag = False
                 self.list_of_errors.append("admin left is boolean (True or False)")
         pass
 
-  
+    def admin_is_active_validator(self):
+        data = self.data['is_active']
+        if data != "":
+            if isinstance(data , bool) == False:
+                self.flag = False
+                self.list_of_errors.append("is active is boolean data (True or False)")
+        pass
 
-    def date_left__lte_validator(self):
+    def admin_date_left__lte_validator(self):
         data = self.data['date_left__lte']
         if data != "":
             try:
@@ -276,8 +164,17 @@ class CustomerQueryInterface:
                 self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date left lte)")
         pass
 
-   
-    def date_left__gte_validator(self):
+    def admin_birth_date__in_validator(self):
+        data = self.data['birth_date']
+        if data != "":
+            try:
+                datetime.datetime.strptime(data, '%Y-%m-%d')
+            except ValueError:
+                self.flag = False
+                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin birth date)")
+        pass
+
+    def admin_date_left__gte_validator(self):
         data = self.data['date_left__gte']
 
         if data != "":
@@ -288,6 +185,15 @@ class CustomerQueryInterface:
                 self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date left gte)")
         pass
 
-   
+    def admin_position_validator(self):
+        data = self.data['position']
 
-    
+        if data != "":
+            if data not in ['MS' , 'CL' , 'CA']:
+                self.flag = False
+                self.list_of_errors.append("please choose a position in [MS , CL , CA]")
+        pass
+
+
+
+

@@ -7,7 +7,7 @@ class IsActive(permissions.BasePermission):
 
     def has_permission(self, request, view):
         try:
-            if request.user.admin_is_active == True:
+            if request.user.is_active == True:
                 
                 
                 return True

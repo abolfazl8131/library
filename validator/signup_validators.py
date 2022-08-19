@@ -1,10 +1,10 @@
 from customer.models import Customer
 import re
 import datetime
-from validator.validators import AdminFieldsValidator
+from validator.validators import AbstractFieldsValidator
 
 # this class does all validation of signup informations
-class SignUpValidator(AdminFieldsValidator):
+class SignUpValidator(AbstractFieldsValidator):
     
     def __init__(self, data):
 

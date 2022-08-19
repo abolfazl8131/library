@@ -1,8 +1,8 @@
 from management.models import LibraryAdmin
 import re
 import datetime
-from validator.validators import AdminFieldsValidator
+from validator.validators import AbstractFieldsValidator
 
 
-class UpdateAdminValidator(AdminFieldsValidator):
+class UpdateAdminValidator(AbstractFieldsValidator):
    pass

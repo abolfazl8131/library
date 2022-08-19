@@ -12,14 +12,14 @@ class SignUpAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = LibraryAdmin
 
-        fields = ['admin_ID',
-        'admin_first_name', 
-        'admin_last_name', 
-        'admin_birth_date',
-        'admin_email',
-        'admin_phone_number' ,
-        'admin_date_joined',
-        'admin_position']
+        fields = ['ID',
+        'first_name', 
+        'last_name', 
+        'birth_date',
+        'email',
+        'phone_number' ,
+        'date_joined',
+        'position']
 
 
         extra_kwargs = {
@@ -32,26 +32,27 @@ class SignUpAdminSerializer(serializers.ModelSerializer):
 class UpdateAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = LibraryAdmin
-        fields = ['admin_ID',
-        'admin_first_name', 
-        'admin_last_name', 
-        'admin_birth_date',
-        'admin_email',
-        'admin_phone_number' ,
-        'admin_position']
+        fields = ['ID',
+        'first_name', 
+        'last_name', 
+        'birth_date',
+        'email',
+        'phone_number' ,
+        'position']
 
 
 class GetAdminListSerializer(serializers.ModelSerializer):
     class Meta:
         model = LibraryAdmin
-        fields = ['admin_ID',
-        'admin_first_name', 
-        'admin_last_name', 
-        'admin_birth_date',
-        'admin_date_joined',
-        'admin_date_left',
-        'admin_email',
-        'admin_phone_number' ,
-        'admin_is_active',
-        'admin_left',
-        'admin_position']
+        fields = ['ID',
+        'first_name', 
+        'last_name', 
+        'birth_date',
+        'date_joined',
+        'date_left',
+        'email',
+        'phone_number' ,
+        'is_active',
+        'left',
+        'position']
+

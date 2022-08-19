@@ -1,4 +1,4 @@
 from .validators import *
 
-class CustomerQueryValidator(CustomerQueryInterface):
+class CustomerQueryValidator(AbstractQueryInterface):
     pass
