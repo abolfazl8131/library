@@ -3,7 +3,7 @@ import datetime
 import re
 from sys import flags
 
-class AbstractFieldsValidator:
+class AbstractUserFieldsValidator:
     flag = True
     list_of_errors = []
     
@@ -92,7 +92,7 @@ class AbstractFieldsValidator:
 
 
 
-class AbstractQueryInterface:
+class AbstractUserQueryInterface:
     flag = True
     list_of_errors = []
 
@@ -122,7 +122,7 @@ class AbstractQueryInterface:
                 datetime.datetime.strptime(data, '%Y-%m-%d')
             except ValueError:
                 self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date joined gte)")
+                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD ( date joined gte)")
         pass
 
 
@@ -135,7 +135,7 @@ class AbstractQueryInterface:
                 datetime.datetime.strptime(data, '%Y-%m-%d')
             except ValueError:
                 self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date joined lte)")
+                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (date joined lte)")
         pass
 
     def admin_left_validator(self):
@@ -143,7 +143,7 @@ class AbstractQueryInterface:
         if data != "":
             if not isinstance(data , bool):
                 self.flag = False
-                self.list_of_errors.append("admin left is boolean (True or False)")
+                self.list_of_errors.append("left is boolean (True or False)")
         pass
 
     def admin_is_active_validator(self):
@@ -161,7 +161,7 @@ class AbstractQueryInterface:
                 datetime.datetime.strptime(data, '%Y-%m-%d')
             except ValueError:
                 self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date left lte)")
+                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (date left lte)")
         pass
 
     def admin_birth_date__in_validator(self):
@@ -171,7 +171,7 @@ class AbstractQueryInterface:
                 datetime.datetime.strptime(data, '%Y-%m-%d')
             except ValueError:
                 self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin birth date)")
+                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD ( birth date)")
         pass
 
     def admin_date_left__gte_validator(self):
@@ -182,7 +182,7 @@ class AbstractQueryInterface:
                 datetime.datetime.strptime(data, '%Y-%m-%d')
             except ValueError:
                 self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (admin date left gte)")
+                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD ( date left gte)")
         pass
 
     def admin_position_validator(self):
@@ -197,3 +197,5 @@ class AbstractQueryInterface:
 
 
 
+class AbstractBookFieldsValidator:
+    pass

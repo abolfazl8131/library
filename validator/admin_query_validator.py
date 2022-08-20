@@ -1,5 +1,5 @@
 import imp
-from validator.validators import AbstractQueryInterface
+from validator.validators import AbstractUserQueryInterface
 
-class AdminQueryValidator(AbstractQueryInterface):
+class AdminQueryValidator(AbstractUserQueryInterface):
     pass

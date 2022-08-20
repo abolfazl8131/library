@@ -4,7 +4,7 @@ from rest_framework import status
 from wsgiref.validate import validator
 from django.shortcuts import render
 from django.http import Http404
-from shared_queries.get_object_by_params import GetObjectByParams
+
 from validator.admin_query_validator import AdminQueryValidator
 from validator.signup_validators import SignUpValidator
 from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView, ListAPIView
@@ -171,7 +171,7 @@ class OverallViewOnAdmins(RetrieveAPIView):
 
     def get_object(self , **kwargs):
 
-        query = GetObjectByParams(LibraryAdmin)
+        query = GetObjects(LibraryAdmin)
         return query.get_object(**kwargs)
 
     @method_decorator(cache_page(CACHE_TTL))
@@ -240,7 +240,7 @@ class OverallViewOnCustomers(APIView):
         return qs
 
     def get_object(self , **kwargs):
-        obj = GetObjectByParams(Customer)
+        obj = GetObjects(Customer)
         obj = obj.get_object(**kwargs)
         return obj
 
