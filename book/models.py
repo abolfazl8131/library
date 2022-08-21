@@ -1,8 +1,9 @@
+from pickle import TRUE
 from django.db import models
 
 # Create your models here.
 class BookGenre(models.Model):
-    genre = models.CharField(max_length = 100 , null = False , db_index = True)
+    genre = models.CharField(max_length = 100 , null = False , db_index = True , unique=True)
     
 
 class BookClass(models.Model):

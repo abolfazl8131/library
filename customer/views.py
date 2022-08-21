@@ -10,7 +10,7 @@ from authentication.OTP import OTP
 
 from .models import *
 
-
+from shared_queries.get_all_objects import GetObjects
 from validator.signup_validators import SignUpValidator
 
 from validator.update_customer_validator import UpdateCustomerValidator
@@ -66,15 +66,14 @@ class UpdateProfile(UpdateAPIView):
     serializer_class =  UpdateCustomerSerializer
     permission_class = []
 
-    def get_queryset(self):
-        ID = self.request.customer.ID
+    def get_queryset(self , **kwargs):
+        query = GetObjects(Customer)
+        return query.get_object(**kwargs)
 
-        customer = Customer.objects.get(ID = ID)
-
-        return customer
 
     def patch(self , request):
         data = request.data
+        ID = self.request.customer.ID
         validator = UpdateCustomerValidator(data)
         is_valid = validator.is_valid()
 
@@ -82,7 +81,7 @@ class UpdateProfile(UpdateAPIView):
 
             return JsonResponse({"error" : is_valid} , status=400)
         
-        serializer = self.serializer_class(self.get_queryset(),data = data , partial = True)
+        serializer = self.serializer_class(self.get_queryset(ID = ID),data = data , partial = True)
         serializer.is_valid(raise_exception = True)
         serializer.save()
         return JsonResponse(serializer.data , status = 201)

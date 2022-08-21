@@ -9,7 +9,6 @@ class IsActive(permissions.BasePermission):
         try:
             if request.user.is_active == True:
                 
-                
                 return True
         
             return False

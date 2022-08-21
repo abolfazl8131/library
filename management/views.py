@@ -64,22 +64,20 @@ class UpdateAdmin(UpdateAPIView):
     permission_classes = permissions
     serializer_class = UpdateAdminSerializer
 
-    def get_object(self):
-        try:
-            _object = LibraryAdmin.objects.get(ID = self.request.GET.get('ID'))
-            return _object
-        except:
-            raise Http404
+    def get_object(self , **kwargs):
+        query = GetObjects(LibraryAdmin)
+        return query.get_object(**kwargs)
 
     def patch(self , request):
         data = request.data
+        ID = request.GET.get('ID')
         validator = UpdateAdminValidator(data)
         is_valid = validator.is_valid()
         
         if not is_valid == True:
             return JsonResponse({"error": is_valid} , status = 400)
     
-        serializer = self.serializer_class(self.get_object(),data = data)
+        serializer = self.serializer_class(self.get_object(ID = ID),data = data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
        
@@ -88,16 +86,15 @@ class UpdateAdmin(UpdateAPIView):
 class DeleteAdmin(DestroyAPIView):
     permission_classes = permissions
 
-    def get_object(self):
+    def get_object(self , **kwargs):
         
-        try:
-            _object = LibraryAdmin.objects.get(ID = self.request.GET.get('ID'))
-            return _object
-        except:
-            raise Http404
+        query = GetObjects(LibraryAdmin)
+        return query.get_object(**kwargs)
+
 
     def delete(self, request):
-        obj = self.get_object()
+        ID = request.GET.get('ID')
+        obj = self.get_object(ID = ID)
         obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -105,16 +102,15 @@ class DeleteAdmin(DestroyAPIView):
 class DeActivateAdmin(APIView):
     permission_classes = permissions
 
-    def get_object(self):
+    def get_object(self , **kwargs):
         
-        try:
-            _object = LibraryAdmin.objects.get(ID = self.request.GET.get('ID'))
-            return _object
-        except:
-            raise Http404
+        query = GetObjects(LibraryAdmin)
+        return query.get_object(**kwargs)
+
 
     def post(self , request):
-        obj = self.get_object()
+        ID = request.GET.get('ID')
+        obj = self.get_object(ID = ID)
         obj.is_active = False
         obj.save()
         return JsonResponse({"data":obj.is_active} , status = 200)
@@ -124,16 +120,14 @@ class DeActivateAdmin(APIView):
 class ActivateAdmin(APIView):
     permission_classes = permissions
 
-    def get_object(self):
+    def get_object(self , **kwargs):
         
-        try:
-            _object = LibraryAdmin.objects.get(ID = self.request.GET.get('ID'))
-            return _object
-        except:
-            raise Http404
+        query = GetObjects(LibraryAdmin)
+        return query.get_object(**kwargs)
 
     def post(self , request):
-        obj = self.get_object()
+        ID = request.GET.get('ID')
+        obj = self.get_object(ID = ID)
         obj.is_active = True
         obj.save()
         return JsonResponse({"data":obj.is_active} , status = 200)
@@ -141,13 +135,14 @@ class ActivateAdmin(APIView):
 class LeaveAdmin(APIView):
     permission_classes = permissions
 
-    def get_object(self , ID):
+    def get_object(self , **kwargs):
 
-        obj = LibraryAdmin.objects.get(ID = ID)
-        return obj
+        query = GetObjects(LibraryAdmin)
+        return query.get_object(**kwargs)
 
     def post(self, request):
-        obj = self.get_object(request.GET.get('ID'))
+        ID = request.GET.get('ID')
+        obj = self.get_object(ID = ID)
         obj.leave()
         obj.save()
         return JsonResponse({'data':obj.left})
@@ -297,6 +292,7 @@ class CustomerFilter(APIView):
         serializer = self.serializer_class(qs , many = True)
 
         return JsonResponse({"data":serializer.data})
+
 
 
 class OverallViewOnBooks():

@@ -135,7 +135,7 @@ WSGI_APPLICATION = 'library.wsgi.application'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": str(os.environ.get("CELERY_CACHE_BACKEND")),
         "OPTIONS": {
             
             "CLIENT_CLASS": "django_redis.client.DefaultClient"

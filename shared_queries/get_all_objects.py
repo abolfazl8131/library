@@ -3,6 +3,7 @@ from django.http import Http404
 
 
 class GetObjects:
+    
     def __init__(self , model:models.Model):
         self.model = model
 
@@ -19,7 +20,7 @@ class GetObjects:
         
         except: 
             
-            return Http404
+            raise Http404
 
    
 

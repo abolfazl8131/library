@@ -41,12 +41,16 @@ class AbstractUserFieldsValidator:
 
 
     def ID_validator(self):
-        if self.statements['ID'] == False:
-            self.flag = False
-            self.list_of_errors.append('please select valid ID code')
+        if not self.ID == "":
+            
+            if self.statements['ID'] == False:
+                self.flag = False
+                print("HT")
+                self.list_of_errors.append('please select valid ID code')
+        pass
 
     def position_validator(self):
-        if not self.position==None:
+        if not self.position=="":
             if self.position not in ['MS' , 'CA' , 'CL']:
                 self.flag = False
                 self.list_of_errors.append("please choose a postion exists in ['MS' , 'CA' , 'CL']")
