@@ -54,7 +54,7 @@ class EnterID(APIView):
 
         return JsonResponse({"data" : otp})
 
-
+import base64
 
 class EnterAuthCode(APIView):
 
@@ -66,7 +66,9 @@ class EnterAuthCode(APIView):
         try:
             data = self.request.data
 
-            customer = SignInCode.objects.get(code = data['code']).customer
+            encoded_otp = base64.b64encode(bytes(data['code'], 'utf-8'))
+            
+            customer = SignInCode.objects.get(code = encoded_otp).customer
         
             customer = self.serializer_class(customer).data
 

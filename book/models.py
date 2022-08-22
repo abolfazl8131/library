@@ -1,4 +1,5 @@
 from pickle import TRUE
+import unittest
 from django.db import models
 
 # Create your models here.
@@ -7,16 +8,20 @@ class BookGenre(models.Model):
     
 
 class BookClass(models.Model):
-    name = models.CharField(max_length = 100 , null = False , db_index = True)
+    name = models.CharField(max_length = 100 , null = False , db_index = True , unique= True)
     genre = models.ForeignKey(BookGenre , on_delete = models.PROTECT)
     authors = models.TextField(null = True)
-    slug = models.SlugField()
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(null = True)
 
 
 class BookObject(models.Model):
-    code = models.CharField(max_length = 100 , null = False , db_index = True)
+    code = models.CharField(max_length = 100 , null = False , db_index = True , unique= True)
     date_published = models.DateField()
     published_no = models.SmallIntegerField()
-    book_class = models.ForeignKey(BookClass , on_delete = models.CASCADE)
+    book_class = models.ForeignKey(BookClass , on_delete = models.PROTECT)
+
+    def get_object(self , code):
+        pass
     
+    def rent(self , code):
+        pass

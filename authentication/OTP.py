@@ -2,7 +2,7 @@ import random
 import string
 from customer.tasks import *
 from customer.models import SignInCode, Customer
-
+import base64
 
 class OTP:
     def __init__(self, data , sending_type):
@@ -26,13 +26,13 @@ class OTP:
 
     def create(self):
 
-        obj =  SignInCode.objects.create(customer= self.get_customer() ,
-                                  code = self.generate_code())
+        encoded_otp = base64.b64encode(bytes(self.generate_code(), 'utf-8'))
+        
 
-        obj =  SignInCode.objects.create(customer= self.get_customer() ,  code = self.generate_code())
+        obj =  SignInCode.objects.create(customer= self.get_customer() ,  code = encoded_otp)
                                  
 
-        return obj.code
+        return base64.b64decode(obj.code).decode()
 
 
     def generate_code(self):
@@ -47,6 +47,7 @@ class OTP:
         random.shuffle(password)
 
         return ("".join(password))
+    
 
     def get_customer(self):
         customer = Customer.objects.get(ID=self.ID)
