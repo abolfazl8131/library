@@ -1,6 +1,8 @@
 from ast import Pass
 from binhex import LINELEN
 from operator import ge
+from telnetlib import STATUS
+from urllib import request
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework import serializers
@@ -50,10 +52,13 @@ class DeleteGenre(DestroyAPIView):
         return qs
 
     def delete(self , request):
-        genre = request.GET.get('genre')
-        qs = self.get_queryset(genre = genre)
-        qs.delete()
-        return JsonResponse({"msg":"deleted!"})
+        try:
+            genre = request.GET.get('genre')
+            qs = self.get_queryset(genre = genre)
+            qs.delete()
+            return JsonResponse({"msg":"deleted!"})
+        except:
+            return JsonResponse({"error":"we cant delete this genre because the is a hard relation bitween thid genre and some book classes!"} , status = 400)
         
 ###############################################################################################################################################
 
@@ -82,12 +87,23 @@ class ClassRegister(APIView):
         return JsonResponse({"data":serializer.data})
 
 
-
-class ClassFilter(ListAPIView):
-    serializer_class = BookClassSerializer
-    queryset = BookClass.objects.all()
+class GetBookClasses(ListAPIView):
+    serializer_class = BookClassGetSerializer
     
+    def get_queryset(self , genre):
+        qs = BookClass.objects.filter(genre__genre = genre)
+        
+        return qs
 
+    def get(self , request):
+        genre = request.GET.get('genre')
+        if not genre == "":
+            qs = self.get_queryset(genre)
+            serializer = self.serializer_class(qs , many = True)
+            return JsonResponse({"data":serializer.data})
+        all_objects = BookClass.objects.all()
+        serializer = self.serializer_class(all_objects , many = True)
+        return JsonResponse({"data":serializer.data})
    
 
 
@@ -100,11 +116,13 @@ class ClassDelete(DestroyAPIView):
         return qs
 
     def delete(self , request):
-        name = request.GET.get('name')
-        qs = self.get_queryset(name = name)
-        qs.delete()
-        return JsonResponse({"msg":"deleted!"})
-
+        try:
+            name = request.GET.get('name')
+            qs = self.get_queryset(name = name)
+            qs.delete()
+            return JsonResponse({"msg":"deleted!"})
+        except:
+            return JsonResponse({"error":"we cant delete this class because the is a hard relation between this class and some book objects!"} , status = 400)
 ##########################################################################################################################3
 
 class ObjectRegister(APIView):
@@ -131,12 +149,37 @@ class ObjectRegister(APIView):
         return JsonResponse({"data":serializer.data})
 
 
-class ObjectFilter(ListAPIView):
+class GetBookObjectsWithSlug(ListAPIView):
 
-    serializer_class = BookObjectSerializer
-    queryset = BookObject.objects.all()
+    serializer_class = BookObjectGetSerializer
+    
+    model = BookObject
+
+    def get_queryset(self):
+
+        name = self.kwargs['name']
+        
+        return self.model.objects.filter(book_class__name = name)
+    
     
 
-   
+
+
+class ObjectDelete(DestroyAPIView):
+
+    query_class = AdvancedDataQuery(BookObject)
+
+    def get_queryset(self , **kwargs):
+        qs = self.query_class.data_query(**kwargs)
+        return qs
+
+    def delete(self , request):
+        try:
+            code = request.GET.get('code')
+            qs = self.get_queryset(code = code)
+            qs.delete()
+            return JsonResponse({"msg":"deleted!"})
+        except:
+            return JsonResponse({"error":"we cant delete this class because the is a hard relation between this class and some book objects!"} , status = 400)
 
 

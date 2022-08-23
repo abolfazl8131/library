@@ -3,10 +3,6 @@ from statistics import mode
 from rest_framework import serializers
 from .models import *
 
-class BookGenreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BookGenre
-        fields = ['genre']
 
 
 
@@ -16,14 +12,38 @@ class BookClassSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = BookClass
-        fields = ['name' , 'genre' , 'authors']
-        
+        fields = ['name' , 'genre' , 'authors' , 'quantity']
+       
+###################################################################################################################3
+class BookGenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookGenre
+        fields = ['genre']
 
+class BookClassGetSerializer(serializers.ModelSerializer):
+    genre = BookGenreSerializer()
+    class Meta:
+        model = BookClass
+        fields = ['name' , 'genre' , 'authors' , 'quantity']
 
-
-
+#########################################################################################################
 class BookObjectSerializer(serializers.ModelSerializer):
     book_class = serializers.SlugRelatedField(queryset = BookClass.objects.all() , slug_field='name')
+    class Meta:
+        model = BookObject
+        fields = ['code' , 'date_published' , 'published_no' , 'book_class']
+
+
+##############################################################################################
+class BookClassNestedSerializer(serializers.ModelSerializer):
+    genre = BookGenreSerializer()
+    class Meta:
+        model = BookClass
+        fields = ['name' , 'genre' , 'authors']
+
+
+class BookObjectGetSerializer(serializers.ModelSerializer):
+    book_class = BookClassNestedSerializer()
     class Meta:
         model = BookObject
         fields = ['code' , 'date_published' , 'published_no' , 'book_class']

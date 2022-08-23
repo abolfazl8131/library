@@ -12,10 +12,10 @@ class AdvancedDataQuery:
             if v == "":
                kwargs.pop(k)
             else:
-                pass
-            
+                pass 
         
         qs = self.model.objects.filter(**kwargs)
+        print(qs)
         
         return qs
 

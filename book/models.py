@@ -11,7 +11,7 @@ class BookClass(models.Model):
     name = models.CharField(max_length = 100 , null = False , db_index = True , unique= True)
     genre = models.ForeignKey(BookGenre , on_delete = models.PROTECT)
     authors = models.TextField(null = True)
-    quantity = models.IntegerField(null = True)
+    quantity = models.IntegerField(default=0)
 
 
 class BookObject(models.Model):
@@ -25,3 +25,5 @@ class BookObject(models.Model):
     
     def rent(self , code):
         pass
+
+    
