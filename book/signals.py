@@ -1,6 +1,6 @@
 import time
 import datetime
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
 from django.http import JsonResponse
 
@@ -12,5 +12,13 @@ from datetime import date
 def create_customer(sender,  instance, **kwargs):
     class_ = instance.book_class
     class_.quantity +=1
+    class_.save() 
+    
+
+
+@receiver(pre_delete , sender = BookObject)
+def create_customer(sender,  instance, **kwargs):
+    class_ = instance.book_class
+    class_.quantity -=1
     class_.save() 
     

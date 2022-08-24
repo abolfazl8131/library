@@ -14,10 +14,14 @@ from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIVie
 from .serializers import *
 from shared_queries.get_all_objects import *
 from shared_queries.advaned_data_query import AdvancedDataQuery
+from permissions.is_active import IsActive
+from permissions.is_clerk import IsClerk
 # Create your views here.
 
+permissons = [IsActive , IsClerk]
 class GenreRegister(APIView):
 
+    permission_classes = permissons
     serializer_class = BookGenreSerializer
 
     def post(self , format = None):
@@ -37,6 +41,7 @@ class GenreRegister(APIView):
 
 
 class GenreFilter(ListAPIView):
+    
     serializer_class = BookGenreSerializer
     queryset = BookGenre.objects.all()
     lookup_field = 'genre'
@@ -45,10 +50,10 @@ class GenreFilter(ListAPIView):
 
 
 class DeleteGenre(DestroyAPIView):
-    query_class = AdvancedDataQuery(BookGenre)
-
+    query_class = GetObjects(BookGenre)
+    permission_classes = permissons
     def get_queryset(self , **kwargs):
-        qs = self.query_class.data_query(**kwargs)
+        qs = self.query_class.get_object(**kwargs)
         return qs
 
     def delete(self , request):
@@ -63,7 +68,7 @@ class DeleteGenre(DestroyAPIView):
 ###############################################################################################################################################
 
 class ClassRegister(APIView):
-
+    permission_classes = permissons
     serializer_class = BookClassSerializer
 
     def post(self , format = None):
@@ -89,7 +94,7 @@ class ClassRegister(APIView):
 
 class GetBookClasses(ListAPIView):
     serializer_class = BookClassGetSerializer
-    
+
     def get_queryset(self , genre):
         qs = BookClass.objects.filter(genre__genre = genre)
         
@@ -108,11 +113,11 @@ class GetBookClasses(ListAPIView):
 
 
 class ClassDelete(DestroyAPIView):
-
-    query_class = AdvancedDataQuery(BookClass)
+    permission_classes = permissons
+    query_class = GetObjects(BookClass)
 
     def get_queryset(self , **kwargs):
-        qs = self.query_class.data_query(**kwargs)
+        qs = self.query_class.get_object(**kwargs)
         return qs
 
     def delete(self , request):
@@ -127,6 +132,7 @@ class ClassDelete(DestroyAPIView):
 
 class ObjectRegister(APIView):
     serializer_class = BookObjectSerializer
+    permission_classes = permissons
 
     def post(self , format = None):
         
@@ -166,20 +172,18 @@ class GetBookObjectsWithSlug(ListAPIView):
 
 
 class ObjectDelete(DestroyAPIView):
-
-    query_class = AdvancedDataQuery(BookObject)
+    permission_classes = permissons
+    query_class = GetObjects(BookObject)
 
     def get_queryset(self , **kwargs):
-        qs = self.query_class.data_query(**kwargs)
+        qs = self.query_class.get_object(**kwargs)
         return qs
 
     def delete(self , request):
-        try:
-            code = request.GET.get('code')
-            qs = self.get_queryset(code = code)
-            qs.delete()
-            return JsonResponse({"msg":"deleted!"})
-        except:
-            return JsonResponse({"error":"we cant delete this class because the is a hard relation between this class and some book objects!"} , status = 400)
-
+        
+        code = request.GET.get('code')
+        qs = self.get_queryset(code = code)
+        qs.delete()
+        return JsonResponse({"msg":"deleted!"})
+       
 

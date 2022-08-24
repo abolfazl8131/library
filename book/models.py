@@ -19,11 +19,8 @@ class BookObject(models.Model):
     date_published = models.DateField()
     published_no = models.SmallIntegerField()
     book_class = models.ForeignKey(BookClass , on_delete = models.PROTECT)
+    available = models.BooleanField(default=True)
 
-    def get_object(self , code):
-        pass
     
-    def rent(self , code):
-        pass
 
     
