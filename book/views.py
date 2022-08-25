@@ -29,6 +29,7 @@ class GenreRegister(APIView):
         data = self.request.data
         genre = data['genre']
         validator = BookGenreVlidator(BookGenre)
+        validator.start()
         is_valid = validator.isvalid(genre)
         if not is_valid == True:
             return JsonResponse({"error":is_valid})
@@ -53,6 +54,7 @@ class DeleteGenre(DestroyAPIView):
     query_class = GetObjects(BookGenre)
     permission_classes = permissons
     def get_queryset(self , **kwargs):
+        self.query_class.start()
         qs = self.query_class.get_object(**kwargs)
         return qs
 
@@ -76,7 +78,7 @@ class ClassRegister(APIView):
         data = self.request.data
 
         validator = BookClassValidator(BookClass , BookGenre)
-
+        validator.start()
         is_valid = validator.isvalid(data['name'] , data['genre'])
 
         if not is_valid == True:
@@ -117,6 +119,7 @@ class ClassDelete(DestroyAPIView):
     query_class = GetObjects(BookClass)
 
     def get_queryset(self , **kwargs):
+        self.query_class.start()
         qs = self.query_class.get_object(**kwargs)
         return qs
 
@@ -139,7 +142,7 @@ class ObjectRegister(APIView):
         data = self.request.data
 
         validator = BookObjectValidator(BookObject , BookClass)
-
+        validator.start()
         is_valid = validator.isvalid(data['code'] , data['book_class'] , data['date_published'] , data['published_no'])
 
         if not is_valid == True:
@@ -162,7 +165,7 @@ class GetBookObjectsWithSlug(ListAPIView):
     model = BookObject
 
     def get_queryset(self):
-
+        
         name = self.kwargs['name']
         
         return self.model.objects.filter(book_class__name = name)
@@ -176,6 +179,7 @@ class ObjectDelete(DestroyAPIView):
     query_class = GetObjects(BookObject)
 
     def get_queryset(self , **kwargs):
+        self.query_class.start()
         qs = self.query_class.get_object(**kwargs)
         return qs
 

@@ -2,13 +2,14 @@
 import datetime
 import re
 from sys import flags
+import threading
 
-class AbstractUserFieldsValidator:
+class AbstractUserFieldsValidator(threading.Thread):
     flag = True
     list_of_errors = []
     
     def __init__(self , data) -> None:
-
+        threading.Thread.__init__(self)
         self.ID = data['ID']
         self.first_name = data['first_name']
         self.last_name = data['last_name']
@@ -93,14 +94,27 @@ class AbstractUserFieldsValidator:
             self.flag = False
 
 
+    def run(self):
+       #domain will be resolved on first thread
+       self.resolve_domain()
+       #thumbnail will be resolved on second OR newly created below thread
+       thread2 = Thread(target=self.generate_website_thumbnail)
+       thread.start()
+       # thread1 will wait for thread2
+       self.join()
+       # thread2 will wait for thread1, if it's late.
+       thread2.join()
+       # here it will print ip and thumbnail before exiting first thread
+       print(self.domain_ip, self.website_thumbnail)
 
 
 
-class AbstractUserQueryInterface:
+class AbstractUserQueryInterface(threading.Thread):
     flag = True
     list_of_errors = []
 
     def __init__(self , data:dict) -> None:
+        threading.Thread.__init__(self)
         self.data = data
 
        
@@ -197,9 +211,19 @@ class AbstractUserQueryInterface:
                 self.flag = False
                 self.list_of_errors.append("please choose a position in [MS , CL , CA]")
         pass
+    
+    def run(self):
+       #domain will be resolved on first thread
+       self.resolve_domain()
+       #thumbnail will be resolved on second OR newly created below thread
+       thread2 = Thread(target=self.generate_website_thumbnail)
+       thread.start()
+       # thread1 will wait for thread2
+       self.join()
+       # thread2 will wait for thread1, if it's late.
+       thread2.join()
+       # here it will print ip and thumbnail before exiting first thread
+       print(self.domain_ip, self.website_thumbnail)
 
 
 
-
-class AbstractBookFieldsValidator:
-    pass

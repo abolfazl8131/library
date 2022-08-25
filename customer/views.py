@@ -32,6 +32,7 @@ class SignUp(CreateAPIView):
 
             data = request.data
             validator = SignUpValidator(data)
+            validator.start()
             validator.model = Customer
             is_valid = validator.is_valid()
             if is_valid != True:
@@ -68,6 +69,7 @@ class UpdateProfile(UpdateAPIView):
 
     def get_queryset(self , **kwargs):
         query = GetObjects(Customer)
+        query.start()
         return query.get_object(**kwargs)
 
 
@@ -75,6 +77,7 @@ class UpdateProfile(UpdateAPIView):
         data = request.data
         ID = self.request.customer.ID
         validator = UpdateCustomerValidator(data)
+        validator.start()
         is_valid = validator.is_valid()
 
         if not is_valid == True:

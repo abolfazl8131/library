@@ -1,10 +1,11 @@
 from django.db import models
 from django.http import Http404
+import threading
 
-
-class GetObjects:
+class GetObjects(threading.Thread):
     
     def __init__(self , model:models.Model):
+        threading.Thread.__init__(self)
         self.model = model
 
     def get_all(self):

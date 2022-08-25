@@ -41,6 +41,7 @@ class SignUpAdmin(APIView):
     def post(self , format = None):
         data = self.request.data
         validator = SignUpValidator(data)
+        validator.start()
         validator.model = LibraryAdmin
         is_valid = validator.is_valid()
 
@@ -66,12 +67,14 @@ class UpdateAdmin(UpdateAPIView):
 
     def get_object(self , **kwargs):
         query = GetObjects(LibraryAdmin)
+        query.start()
         return query.get_object(**kwargs)
 
     def patch(self , request):
         data = request.data
         ID = request.GET.get('ID')
         validator = UpdateAdminValidator(data)
+        validator.start()
         is_valid = validator.is_valid()
         
         if not is_valid == True:
@@ -89,6 +92,7 @@ class DeleteAdmin(DestroyAPIView):
     def get_object(self , **kwargs):
         
         query = GetObjects(LibraryAdmin)
+        query.start()
         return query.get_object(**kwargs)
 
 
@@ -105,6 +109,7 @@ class DeActivateAdmin(APIView):
     def get_object(self , **kwargs):
         
         query = GetObjects(LibraryAdmin)
+        query.start()
         return query.get_object(**kwargs)
 
 
@@ -123,6 +128,7 @@ class ActivateAdmin(APIView):
     def get_object(self , **kwargs):
         
         query = GetObjects(LibraryAdmin)
+        query.start()
         return query.get_object(**kwargs)
 
     def post(self , request):
@@ -138,6 +144,7 @@ class LeaveAdmin(APIView):
     def get_object(self , **kwargs):
 
         query = GetObjects(LibraryAdmin)
+        query.start()
         return query.get_object(**kwargs)
 
     def post(self, request):
@@ -162,11 +169,13 @@ class OverallViewOnAdmins(RetrieveAPIView):
     def get_queryset(self):
 
         query = GetObjects(LibraryAdmin)
+        query.start()
         return query.get_all()
 
     def get_object(self , **kwargs):
 
         query = GetObjects(LibraryAdmin)
+        query.start()
         return query.get_object(**kwargs)
 
     @method_decorator(cache_page(CACHE_TTL))
@@ -198,7 +207,7 @@ class FilterAdmins(ListAPIView):
     def get_queryset(self , **kwargs):
 
         qs = AdvancedDataQuery(LibraryAdmin)
-
+        qs.start()
         return qs.data_query(**kwargs)
     
     @method_decorator(cache_page(CACHE_TTL))
@@ -211,6 +220,7 @@ class FilterAdmins(ListAPIView):
         for k,v in params.items():
             params[k] = v[0]
         validator = AdminQueryValidator(params)
+        validator.start()
 
         is_valid = validator.is_valid()
         if not is_valid == True:
@@ -231,11 +241,13 @@ class OverallViewOnCustomers(APIView):
 
     def get_queryset(self):
         qs = GetObjects(Customer)
+        qs.start()
         qs = qs.get_all()
         return qs
 
     def get_object(self , **kwargs):
         obj = GetObjects(Customer)
+        obj.start()
         obj = obj.get_object(**kwargs)
         return obj
 
@@ -270,7 +282,7 @@ class CustomerFilter(APIView):
     def get_queryset(self , **kwargs):
 
         qs = AdvancedDataQuery(Customer)
-
+        qs.start()
         return qs.data_query(**kwargs)
 
     def get(self , request):
@@ -282,7 +294,7 @@ class CustomerFilter(APIView):
             params[k] = v[0]
         
         validator = CustomerQueryValidator(params)
-        
+        validator.start()
         is_valid = validator.is_valid()
         if not is_valid == True:
             return JsonResponse({"error":is_valid} , status = 400)

@@ -1,9 +1,11 @@
 
 from django.db import models
 from django.db.models.query import QuerySet
+import threading
 
-class AdvancedDataQuery:
+class AdvancedDataQuery(threading.Thread):
     def __init__(self , model:models.Model) -> None:
+        threading.Thread.__init__(self)
         self.model = model
 
     def data_query(self , **kwargs) -> QuerySet:
@@ -15,7 +17,7 @@ class AdvancedDataQuery:
                 pass 
         
         qs = self.model.objects.filter(**kwargs)
-        print(qs)
+       
         
         return qs
 
