@@ -41,7 +41,7 @@ class SignUpAdmin(APIView):
     def post(self , format = None):
         data = self.request.data
         validator = SignUpValidator(data)
-        validator.start()
+        validator.run()
         validator.model = LibraryAdmin
         is_valid = validator.is_valid()
 
@@ -67,14 +67,14 @@ class UpdateAdmin(UpdateAPIView):
 
     def get_object(self , **kwargs):
         query = GetObjects(LibraryAdmin)
-        query.start()
+        query.run()
         return query.get_object(**kwargs)
 
     def patch(self , request):
         data = request.data
         ID = request.GET.get('ID')
         validator = UpdateAdminValidator(data)
-        validator.start()
+        validator.run()
         is_valid = validator.is_valid()
         
         if not is_valid == True:
@@ -92,7 +92,7 @@ class DeleteAdmin(DestroyAPIView):
     def get_object(self , **kwargs):
         
         query = GetObjects(LibraryAdmin)
-        query.start()
+        query.run()
         return query.get_object(**kwargs)
 
 
@@ -109,14 +109,14 @@ class DeActivateAdmin(APIView):
     def get_object(self , **kwargs):
         
         query = GetObjects(LibraryAdmin)
-        query.start()
+        query.run()
         return query.get_object(**kwargs)
 
 
     def post(self , request):
         ID = request.GET.get('ID')
         obj = self.get_object(ID = ID)
-        obj.is_active = False
+        obj.deactivate()
         obj.save()
         return JsonResponse({"data":obj.is_active} , status = 200)
     
@@ -128,13 +128,13 @@ class ActivateAdmin(APIView):
     def get_object(self , **kwargs):
         
         query = GetObjects(LibraryAdmin)
-        query.start()
+        query.run()
         return query.get_object(**kwargs)
 
     def post(self , request):
         ID = request.GET.get('ID')
         obj = self.get_object(ID = ID)
-        obj.is_active = True
+        obj.activate()
         obj.save()
         return JsonResponse({"data":obj.is_active} , status = 200)
 
@@ -144,7 +144,7 @@ class LeaveAdmin(APIView):
     def get_object(self , **kwargs):
 
         query = GetObjects(LibraryAdmin)
-        query.start()
+        query.run()
         return query.get_object(**kwargs)
 
     def post(self, request):
@@ -161,7 +161,7 @@ class LeaveAdmin(APIView):
 # the methods will be declared on shared_views module!
 
 
-class OverallViewOnAdmins(RetrieveAPIView):
+class OverallViewOnAdmins(ListAPIView):
     serializer_class = GetAdminListSerializer
     permission_classes = permissions
 
@@ -175,7 +175,7 @@ class OverallViewOnAdmins(RetrieveAPIView):
     def get_object(self , **kwargs):
 
         query = GetObjects(LibraryAdmin)
-        query.start()
+        query.run()
         return query.get_object(**kwargs)
 
     @method_decorator(cache_page(CACHE_TTL))
@@ -220,7 +220,7 @@ class FilterAdmins(ListAPIView):
         for k,v in params.items():
             params[k] = v[0]
         validator = AdminQueryValidator(params)
-        validator.start()
+        validator.run()
 
         is_valid = validator.is_valid()
         if not is_valid == True:
@@ -247,10 +247,11 @@ class OverallViewOnCustomers(APIView):
 
     def get_object(self , **kwargs):
         obj = GetObjects(Customer)
-        obj.start()
+        obj.run()
         obj = obj.get_object(**kwargs)
         return obj
 
+    @method_decorator(cache_page(CACHE_TTL))
     def get(self , request):
 
         data = request.GET.get
@@ -285,6 +286,7 @@ class CustomerFilter(APIView):
         qs.start()
         return qs.data_query(**kwargs)
 
+    @method_decorator(cache_page(CACHE_TTL))
     def get(self , request):
         query_params = request.GET
 
@@ -294,7 +296,7 @@ class CustomerFilter(APIView):
             params[k] = v[0]
         
         validator = CustomerQueryValidator(params)
-        validator.start()
+        validator.run()
         is_valid = validator.is_valid()
         if not is_valid == True:
             return JsonResponse({"error":is_valid} , status = 400)

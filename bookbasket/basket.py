@@ -1,6 +1,6 @@
 import threading
 
-class BookBasket():
+class BookBasket:
     book_objects = []
 
     def __init__(self) -> None:

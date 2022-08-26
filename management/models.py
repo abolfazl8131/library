@@ -1,3 +1,4 @@
+from http import server
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser , BaseUserManager
 import enum
@@ -60,6 +61,15 @@ class LibraryAdmin(AbstractBaseUser):
     def leave(self):
         self.left = True
         self.date_left =  date.today()
+    
+    def deactivate(self):
+        self.is_active = False
+
+    def activate(self):
+        self.is_active = True
+    
+    def position_updating(self , pos):
+        self.position = pos
 
     
    

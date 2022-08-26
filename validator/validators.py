@@ -4,12 +4,12 @@ import re
 from sys import flags
 import threading
 
-class AbstractUserFieldsValidator(threading.Thread):
+class AbstractUserFieldsValidator:
     flag = True
     list_of_errors = []
     
     def __init__(self , data) -> None:
-        threading.Thread.__init__(self)
+        
         self.ID = data['ID']
         self.first_name = data['first_name']
         self.last_name = data['last_name']
@@ -95,26 +95,35 @@ class AbstractUserFieldsValidator(threading.Thread):
 
 
     def run(self):
-       #domain will be resolved on first thread
-       self.resolve_domain()
-       #thumbnail will be resolved on second OR newly created below thread
-       thread2 = Thread(target=self.generate_website_thumbnail)
-       thread.start()
-       # thread1 will wait for thread2
-       self.join()
-       # thread2 will wait for thread1, if it's late.
-       thread2.join()
-       # here it will print ip and thumbnail before exiting first thread
-       print(self.domain_ip, self.website_thumbnail)
+        t1 = threading.Thread(target=self.ID_validator)
+        t2 = threading.Thread(target=self.phone_validator)
+        t3 = threading.Thread(target=self.name_validator)
+        t4 = threading.Thread(target=self.email_validator)
+        t5 = threading.Thread(target=self.birthdate_validator)
+        t6 = threading.Thread(target=self.position_validator)
+        
+        t1.start()
+        t2.start()
+        t3.start()
+        t4.start()
+        t5.start()
+        t6.start()
 
 
+        t1.join()
+        t2.join()
+        t3.join()
+        t4.join()
+        t5.join()
+        t6.join()
 
-class AbstractUserQueryInterface(threading.Thread):
+
+class AbstractUserQueryInterface:
     flag = True
     list_of_errors = []
 
     def __init__(self , data:dict) -> None:
-        threading.Thread.__init__(self)
+       
         self.data = data
 
        
@@ -213,17 +222,29 @@ class AbstractUserQueryInterface(threading.Thread):
         pass
     
     def run(self):
-       #domain will be resolved on first thread
-       self.resolve_domain()
-       #thumbnail will be resolved on second OR newly created below thread
-       thread2 = Thread(target=self.generate_website_thumbnail)
-       thread.start()
-       # thread1 will wait for thread2
-       self.join()
-       # thread2 will wait for thread1, if it's late.
-       thread2.join()
-       # here it will print ip and thumbnail before exiting first thread
-       print(self.domain_ip, self.website_thumbnail)
+        t1 = threading.Thread(target=self.admin_birth_date__in_validator)
+        t2 = threading.Thread(target=self.admin_date_joined__gte_validator)
+        t3 = threading.Thread(target=self.admin_date_joined__lte_validator)
+        t4 = threading.Thread(target=self.admin_date_left__gte_validator)
+        t5 = threading.Thread(target=self.admin_date_left__lte_validator)
+        t6 = threading.Thread(target=self.admin_is_active_validator)
+        t7 = threading.Thread(target=self.admin_left_validator)
+        t8 = threading.Thread(target=self.admin_position_validator)
+        t1.start()
+        t2.start()
+        t3.start()
+        t4.start()
+        t5.start()
+        t6.start()
+        t7.start()
+        t8.start()
 
-
+        t1.join()
+        t2.join()
+        t3.join()
+        t4.join()
+        t5.join()
+        t6.join()
+        t7.join()
+        t8.join()
 

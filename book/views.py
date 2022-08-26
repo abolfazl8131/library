@@ -16,9 +16,15 @@ from shared_queries.get_all_objects import *
 from shared_queries.advaned_data_query import AdvancedDataQuery
 from permissions.is_active import IsActive
 from permissions.is_clerk import IsClerk
+from django.utils.decorators import method_decorator
+from django.conf import *
+from django.views.decorators.cache import cache_page
+
 # Create your views here.
 
+CACHE_TTL = getattr(settings, 'CACHE_TTL')
 permissons = [IsActive , IsClerk]
+
 class GenreRegister(APIView):
 
     permission_classes = permissons
@@ -102,6 +108,7 @@ class GetBookClasses(ListAPIView):
         
         return qs
 
+    @method_decorator(cache_page(CACHE_TTL))
     def get(self , request):
         genre = request.GET.get('genre')
         if not genre == "":

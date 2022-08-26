@@ -1,17 +1,14 @@
-
-
-from distutils.log import error
 from sys import flags
 import datetime
 import threading
 from threading import Thread
 
-class BookGenreVlidator(threading.Thread):
+class BookGenreVlidator:
     list_of_errors = []
     flag = True
 
     def __init__(self , model) -> None:
-        threading.Thread.__init__(self)
+       
         self.model = model
 
 
@@ -31,26 +28,21 @@ class BookGenreVlidator(threading.Thread):
             return self.list_of_errors
         return True
     def run(self):
-       #domain will be resolved on first thread
-       self.resolve_domain()
-       #thumbnail will be resolved on second OR newly created below thread
-       thread2 = Thread(target=self.generate_website_thumbnail)
-       thread.start()
-       # thread1 will wait for thread2
-       self.join()
-       # thread2 will wait for thread1, if it's late.
-       thread2.join()
-       # here it will print ip and thumbnail before exiting first thread
-       print(self.domain_ip, self.website_thumbnail)
+        t1 = threading.Thread(target=self.isvalid)
+        
+        t1.start()
+        
+        t1.join()
+        
 
 
 
-class BookClassValidator(threading.Thread):
+class BookClassValidator:
     list_of_errors = []
     flag = True
 
     def __init__(self , model , genre_model) -> None:
-        threading.Thread.__init__(self)
+        
         self.model = model
         self.genre_model = genre_model
 
@@ -73,26 +65,22 @@ class BookClassValidator(threading.Thread):
         if self.flag == False:
             return self.list_of_errors
         return True
+        
     def run(self):
-       #domain will be resolved on first thread
-       self.resolve_domain()
-       #thumbnail will be resolved on second OR newly created below thread
-       thread2 = Thread(target=self.generate_website_thumbnail)
-       thread.start()
-       # thread1 will wait for thread2
-       self.join()
-       # thread2 will wait for thread1, if it's late.
-       thread2.join()
-       # here it will print ip and thumbnail before exiting first thread
-       print(self.domain_ip, self.website_thumbnail)
+        t1 = threading.Thread(target=self.isvalid)
+        
+        t1.start()
+       
+        t1.join()
+      
 
 
-class BookObjectValidator(threading.Thread):
+class BookObjectValidator:
     list_of_errors = []
     flag = True
 
     def __init__(self , model , class_model) -> None:
-        threading.Thread.__init__(self)
+        
         self.model = model
         self.class_model = class_model
 
@@ -122,25 +110,20 @@ class BookObjectValidator(threading.Thread):
         return True
 
     def run(self):
-       #domain will be resolved on first thread
-       self.resolve_domain()
-       #thumbnail will be resolved on second OR newly created below thread
-       thread2 = Thread(target=self.generate_website_thumbnail)
-       thread.start()
-       # thread1 will wait for thread2
-       self.join()
-       # thread2 will wait for thread1, if it's late.
-       thread2.join()
-       # here it will print ip and thumbnail before exiting first thread
-       print(self.domain_ip, self.website_thumbnail)
+        t1 = threading.Thread(target=self.isvalid)
+        
+        t1.start()
+      
+        t1.join()
+        
 
 
-class BookBasketValidator(threading.Thread):
+class BookBasketValidator:
     flag = True
     list_of_errors = []
 
     def __init__(self , model) -> None:
-        threading.Thread.__init__(self)
+        
         self.model = model
 
     def is_valid(self , obj):
@@ -150,14 +133,9 @@ class BookBasketValidator(threading.Thread):
 
             return "this book with the given code doesn't exists in database!"
     def run(self):
-       #domain will be resolved on first thread
-       self.resolve_domain()
-       #thumbnail will be resolved on second OR newly created below thread
-       thread2 = Thread(target=self.generate_website_thumbnail)
-       thread.start()
-       # thread1 will wait for thread2
-       self.join()
-       # thread2 will wait for thread1, if it's late.
-       thread2.join()
-       # here it will print ip and thumbnail before exiting first thread
-       print(self.domain_ip, self.website_thumbnail)
+        t1 = threading.Thread(target=self.is_valid)
+      
+        t1.start()
+        
+        t1.join()
+        
