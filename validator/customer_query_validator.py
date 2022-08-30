@@ -1,4 +1,4 @@
-from .validators import *
+from .validators import AbstractUserQueryInterface
 
 class CustomerQueryValidator(AbstractUserQueryInterface):
     def __init__(self , data):

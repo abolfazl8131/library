@@ -1,6 +1,4 @@
 from customer.models import Customer
-import re
-import datetime
 
 
 

@@ -1,29 +1,21 @@
-from ast import Pass
-from binhex import LINELEN
-from operator import ge
-from telnetlib import STATUS
-from urllib import request
-from django.shortcuts import render
+
 from django.http import JsonResponse
-from rest_framework import serializers
-from rest_framework.response import Response
 from rest_framework.views import APIView
-from validator.book.book_validator import *
-from .models import BookGenre
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView, ListAPIView
-from .serializers import *
-from shared_queries.get_all_objects import *
-from shared_queries.advaned_data_query import AdvancedDataQuery
+from validator.book.book_validator import BookObjectValidator ,BookClassValidator , BookGenreVlidator
+from .models import BookGenre ,BookClass , BookObject
+from rest_framework.generics import DestroyAPIView, ListAPIView
+from .serializers import BookClassGetSerializer , BookClassSerializer , BookObjectGetSerializer , BookObjectSerializer , BookGenreSerializer
+from shared_queries.get_all_objects import GetObjects 
 from permissions.is_active import IsActive
 from permissions.is_clerk import IsClerk
 from django.utils.decorators import method_decorator
-from django.conf import *
+from django.conf import settings
 from django.views.decorators.cache import cache_page
 
 # Create your views here.
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL')
-permissons = [IsActive , IsClerk]
+permissons = (IsActive , IsClerk)
 
 class GenreRegister(APIView):
 
@@ -38,7 +30,7 @@ class GenreRegister(APIView):
         validator.start()
         is_valid = validator.isvalid(genre)
         if not is_valid == True:
-            return JsonResponse({"error":is_valid})
+            return JsonResponse({"error":is_valid} , status = 400)
         serializer = self.serializer_class(data = data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -69,7 +61,7 @@ class DeleteGenre(DestroyAPIView):
             genre = request.GET.get('genre')
             qs = self.get_queryset(genre = genre)
             qs.delete()
-            return JsonResponse({"msg":"deleted!"})
+            return JsonResponse({"msg":"deleted!"}, status = 400)
         except:
             return JsonResponse({"error":"we cant delete this genre because the is a hard relation bitween thid genre and some book classes!"} , status = 400)
         
@@ -89,7 +81,7 @@ class ClassRegister(APIView):
 
         if not is_valid == True:
 
-            return JsonResponse({"error":is_valid})
+            return JsonResponse({"error":is_valid}, status = 400)
 
         serializer = self.serializer_class(data = data)
 
@@ -154,7 +146,7 @@ class ObjectRegister(APIView):
 
         if not is_valid == True:
 
-            return JsonResponse({"error":is_valid})
+            return JsonResponse({"error":is_valid}, status = 400)
 
         serializer = self.serializer_class(data = data)
 
@@ -171,11 +163,19 @@ class GetBookObjectsWithSlug(ListAPIView):
     
     model = BookObject
 
-    def get_queryset(self):
+    def get_queryset(self , **kwargs):
         
-        name = self.kwargs['name']
+        name = kwargs['name']
         
         return self.model.objects.filter(book_class__name = name)
+
+    @method_decorator(cache_page(CACHE_TTL))
+    def get(self , request , *args, **kwargs):
+        name = self.kwargs['name']
+        qs = self.get_queryset(name = name)
+        
+        serializer = self.serializer_class(qs , many = True)
+        return JsonResponse({"data":serializer.data})
     
     
 

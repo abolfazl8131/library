@@ -1,27 +1,15 @@
-from django.shortcuts import render
+
 from django.http import JsonResponse
-from rest_framework import serializers
-from rest_framework.response import Response
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView, ListAPIView
-from rest_framework.permissions import *
+from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.views import APIView
-from .serializers import *
+from .serializers import SignUpSerializer , UpdateCustomerSerializer
 from authentication.OTP import OTP
-
-from .models import *
-
 from shared_queries.get_all_objects import GetObjects
 from validator.signup_validators import SignUpValidator
-
 from validator.update_customer_validator import UpdateCustomerValidator
-
-from validator.ID_unique_validator import IDCodeValidator
-
-from .models import *
+from .models import Customer 
 from django.db import transaction
-from authentication.jwt import JsonWebToken
-from django.utils.decorators import decorator_from_middleware
-from middlewars.jwt_middleware import JWTMiddleWare
+
 
 
 class SignUp(CreateAPIView):

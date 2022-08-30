@@ -11,7 +11,7 @@ from datetime import date
 @receiver(pre_save , sender = BookObject)
 def create_customer(sender,  instance, **kwargs):
     class_ = instance.book_class
-    class_.quantity +=1
+    class_.increase_quantity()
     class_.save() 
     
 
@@ -19,6 +19,6 @@ def create_customer(sender,  instance, **kwargs):
 @receiver(pre_delete , sender = BookObject)
 def create_customer(sender,  instance, **kwargs):
     class_ = instance.book_class
-    class_.quantity -=1
+    class_.decrease_quantity()
     class_.save() 
     

@@ -7,10 +7,9 @@ from django.utils.deprecation import MiddlewareMixin
 class JWTMiddleWare(MiddlewareMixin):
 
     WHITELISTED_URLS = [
-        "/customer/profile/" , "/customer/update/"]
+        "/customer/profile/" , "/customer/update/" , "/core/basket/add/" , "/core/basket/delete/" , "/core/basket/get/"]
 
     def process_request(self, request):
-
         
         if request.path in self.WHITELISTED_URLS:
             token = request.META.get("HTTP_AUTHORIZATION", "")
@@ -21,6 +20,7 @@ class JWTMiddleWare(MiddlewareMixin):
                 user_obj = Customer.objects.get(ID = user_ID)
 
                 request.customer  = user_obj
+                
 
             except Exception as e:
                 

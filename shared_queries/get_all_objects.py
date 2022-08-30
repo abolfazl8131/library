@@ -2,10 +2,10 @@ from django.db import models
 from django.http import Http404
 import threading
 
-class GetObjects(threading.Thread):
+class GetObjects:
     
     def __init__(self , model:models.Model):
-        threading.Thread.__init__(self)
+       
         self.model = model
 
     def get_all(self):
@@ -22,6 +22,16 @@ class GetObjects(threading.Thread):
         except: 
             
             raise Http404
+    
+    def run(self):
+        
+        t1 = threading.Thread(target=self.get_all)
+        t2 = threading.Thread(target=self.get_object)
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+
 
    
 

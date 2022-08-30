@@ -1,7 +1,6 @@
 
 import datetime
 import re
-from sys import flags
 import threading
 
 class AbstractUserFieldsValidator:
@@ -141,29 +140,26 @@ class AbstractUserQueryInterface:
         if self.flag == False:
             return self.list_of_errors
         return True
-
-    def admin_date_joined__gte_validator(self):
-        data = self.data['date_joined__gte']
+    def date_validator(self , data):
         if data != "":
             try:
                 datetime.datetime.strptime(data, '%Y-%m-%d')
             except ValueError:
                 self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD ( date joined gte)")
+                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD ")
         pass
+
+
+    def admin_date_joined__gte_validator(self):
+        data = self.data['date_joined__gte']
+        self.date_validator(data)
 
 
 
     
     def admin_date_joined__lte_validator(self):
         data = self.data['date_joined__lte']
-        if data != "":
-            try:
-                datetime.datetime.strptime(data, '%Y-%m-%d')
-            except ValueError:
-                self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (date joined lte)")
-        pass
+        self.date_validator(data)
 
     def admin_left_validator(self):
         data = self.data['left']
@@ -183,43 +179,21 @@ class AbstractUserQueryInterface:
 
     def admin_date_left__lte_validator(self):
         data = self.data['date_left__lte']
-        if data != "":
-            try:
-                datetime.datetime.strptime(data, '%Y-%m-%d')
-            except ValueError:
-                self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD (date left lte)")
-        pass
+        self.date_validator(data)
 
     def admin_birth_date__in_validator(self):
         data = self.data['birth_date']
-        if data != "":
-            try:
-                datetime.datetime.strptime(data, '%Y-%m-%d')
-            except ValueError:
-                self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD ( birth date)")
-        pass
+        self.date_validator(data)
 
     def admin_date_left__gte_validator(self):
         data = self.data['date_left__gte']
 
-        if data != "":
-            try:
-                datetime.datetime.strptime(data, '%Y-%m-%d')
-            except ValueError:
-                self.flag = False
-                self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD ( date left gte)")
-        pass
+        self.date_validator(data)
 
     def admin_position_validator(self):
         data = self.data['position']
 
-        if data != "":
-            if data not in ['MS' , 'CL' , 'CA']:
-                self.flag = False
-                self.list_of_errors.append("please choose a position in [MS , CL , CA]")
-        pass
+        self.date_validator(data)
     
     def run(self):
         t1 = threading.Thread(target=self.admin_birth_date__in_validator)

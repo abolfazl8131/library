@@ -1,36 +1,28 @@
-from functools import partial
 from rest_framework.response import Response
 from rest_framework import status
-from wsgiref.validate import validator
-from django.shortcuts import render
-from django.http import Http404
-
 from validator.admin_query_validator import AdminQueryValidator
 from validator.signup_validators import SignUpValidator
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView, ListAPIView
-from validator.update_customer_validator import UpdateCustomerValidator
-from permissions.is_master import *
-from validator.ID_unique_validator import IDCodeValidator
-from .serializers import *
+from rest_framework.generics import UpdateAPIView, DestroyAPIView, ListAPIView
+from permissions.is_master import IsMaster
+from .serializers import SignUpAdminSerializer , UpdateAdminSerializer , GetAdminListSerializer
 from django.http import JsonResponse
-from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import *
-from validator.update_admin_validator import *
-from shared_queries.get_all_objects import *
-from permissions.is_active import *
+from .models import LibraryAdmin
+from validator.update_admin_validator import UpdateAdminValidator 
+from shared_queries.get_all_objects import GetObjects
+from permissions.is_active import IsActive
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from shared_queries.advaned_data_query import *
-from validator.customer_query_validator import *
+from shared_queries.advaned_data_query import AdvancedDataQuery
+from validator.customer_query_validator import CustomerQueryValidator
 from django.contrib.auth import get_user_model
 LibraryAdmin = get_user_model()
 # what master do with admin
 
-permissions = [IsActive , IsMaster]
+permissions = (IsActive , IsMaster)
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -306,27 +298,4 @@ class CustomerFilter(APIView):
         serializer = self.serializer_class(qs , many = True)
 
         return JsonResponse({"data":serializer.data})
-
-
-
-class OverallViewOnBooks():
-    permission_classes = permissions
-
-    def get_queryset(self):
-        pass
-
-    def get(self , request):
-        pass
-
-class BookFilter():
-    pass
-
-class LoanFilter():
-    permission_classes = permissions
-
-    def get_queryset(self):
-        pass
-
-    def get(self , request):
-        pass
 

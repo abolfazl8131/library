@@ -3,9 +3,9 @@ from django.db import models
 from django.db.models.query import QuerySet
 import threading
 
-class AdvancedDataQuery(threading.Thread):
+class AdvancedDataQuery:
     def __init__(self , model:models.Model) -> None:
-        threading.Thread.__init__(self)
+        
         self.model = model
 
     def data_query(self , **kwargs) -> QuerySet:
@@ -20,5 +20,12 @@ class AdvancedDataQuery(threading.Thread):
        
         
         return qs
+    
+    def run(self):
+        
+        t1 = threading.Thread(target=self.data_query)
+        t1.start()
+        t1.join()
+
 
     

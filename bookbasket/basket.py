@@ -1,24 +1,41 @@
-import threading
+from django.http import Http404
 
 class BookBasket:
-    book_objects = []
+   
+    def __init__(self , book_model , basket , customer) -> None:
+        self.book_model = book_model
+        self.basket = basket
+        self.customer = customer
 
-    def __init__(self) -> None:
-        pass
+    def get_book_object(self , book_object , available:bool):
+        return self.book_model.objects.get(code = book_object , available = available)
 
     def add(self , book_object):
-        self.book_objects.append(book_object)
+        try:
+            m = self.get_book_object(book_object , True)
+            
+            self.basket.objects.create(book_object = m , customer = self.customer)
+
+        except Exception as e:
+            
+            return Http404
 
     def get(self):
-        return self.book_objects
+        return self.basket.objects.filter(customer = self.customer)
 
-    def run(self):
-        t1 = threading.Thread(target=self.add)
-        t2 = threading.Thread(target=self.get)
-        t1.start()
-        t2.start()
-        t1.join()
-        t2.join()
+    def delete_obj(self , book_object):
+        try:
+            obj = self.get_book_object(book_object , False)
+            self.basket.objects.delete(customer = self.customer , book_object = obj)
+            
+        except Exception as e:
+            return Http404
+
+
+    def delete(self):
+        self.basket.objects.filter(customer = self.customer).delete()
+
+   
 
 
     

@@ -21,6 +21,7 @@ class BookClass(models.Model):
 
 
 class BookObject(models.Model):
+    
     code = models.CharField(max_length = 100 , null = False , db_index = True , unique= True)
     date_published = models.DateField()
     published_no = models.SmallIntegerField()
@@ -32,6 +33,13 @@ class BookObject(models.Model):
 
     def is_available(self):
         self.available = True
+
+
+
+
+
+
+
 
     
 

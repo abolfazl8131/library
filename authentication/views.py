@@ -44,13 +44,12 @@ class EnterID(APIView):
         sending_type = data['type'] | 1
 
         otp_obj = OTP(data , sending_type)
+        
         otp = otp_obj.choose()
-
 
         otp_obj = OTP(data , sending_type)
 
         otp = otp_obj.choose()
-
 
         return JsonResponse({"data" : otp})
 
@@ -79,7 +78,7 @@ class EnterAuthCode(APIView):
             return JsonResponse({"token" : jwt})
 
         except Exception as e:
-            print(e)
+            
             return JsonResponse({"error":"your code in invalid! mybe expired or wrong!"} , status = 401)
 
 

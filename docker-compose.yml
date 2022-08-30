@@ -30,7 +30,7 @@ services:
       context: .
 
     image: celery_worker
-    command: bash -c "celery -A code worker -l INFO"
+    command: bash -c "celery -A library worker -l INFO"
 
     volumes:
       - .:/code
@@ -46,7 +46,7 @@ services:
         context: .
 
       image: celery_beat
-      command: bash -c "celery -A code beat -l INFO"
+      command: bash -c "celery -A library beat -l INFO"
       env_file:
         - ./.env
 
