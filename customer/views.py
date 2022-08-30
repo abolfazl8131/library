@@ -77,3 +77,5 @@ class UpdateProfile(UpdateAPIView):
         serializer.save()
         return JsonResponse(serializer.data , status = 201)
 
+
+

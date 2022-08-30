@@ -18,6 +18,8 @@ class BookClass(models.Model):
     
     def decrease_quantity(self):
         self.quantity -= 1
+    
+        
 
 
 class BookObject(models.Model):

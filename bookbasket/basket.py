@@ -26,7 +26,7 @@ class BookBasket:
     def delete_obj(self , book_object):
         try:
             obj = self.get_book_object(book_object , False)
-            self.basket.objects.delete(customer = self.customer , book_object = obj)
+            self.basket.objects.get(customer = self.customer , book_object = obj).delete()
             
         except Exception as e:
             return Http404

@@ -141,7 +141,7 @@ class ObjectRegister(APIView):
         data = self.request.data
 
         validator = BookObjectValidator(BookObject , BookClass)
-        validator.start()
+        validator.run()
         is_valid = validator.isvalid(data['code'] , data['book_class'] , data['date_published'] , data['published_no'])
 
         if not is_valid == True:

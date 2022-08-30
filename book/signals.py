@@ -8,16 +8,17 @@ from .models import *
 from datetime import date
 
 
-@receiver(pre_save , sender = BookObject)
-def create_customer(sender,  instance, **kwargs):
+@receiver(post_save , sender = BookObject)
+def create_book(sender,  instance, **kwargs):
     class_ = instance.book_class
-    class_.increase_quantity()
+    q = BookObject.objects.filter(book_class__name = class_.name).count()
+    class_.quantity = q
     class_.save() 
     
 
 
 @receiver(pre_delete , sender = BookObject)
-def create_customer(sender,  instance, **kwargs):
+def delete_book(sender,  instance, **kwargs):
     class_ = instance.book_class
     class_.decrease_quantity()
     class_.save() 

@@ -46,5 +46,5 @@ class BookObjectGetSerializer(serializers.ModelSerializer):
     book_class = BookClassNestedSerializer()
     class Meta:
         model = BookObject
-        fields = ['code' , 'date_published' , 'published_no' , 'book_class']
+        fields = ['code' , 'date_published' , 'published_no' , 'book_class' , 'available']
 

@@ -19,7 +19,7 @@ class Rent(APIView):
 class AddToBasket(APIView):
     
     serializer_class = BasketSerializer
-    permission_classes = []
+    
 
     def post(self , format = None):
         data = self.request.data
@@ -39,6 +39,7 @@ class DeleteBasket(DestroyAPIView):
         if param == None:
             basket.delete()
             return JsonResponse({"msg":"deleted your current basket"})
+        print(param)
         basket.delete_obj(param)
         return JsonResponse({"msg":"your object has been deleted successfully!"})
 
