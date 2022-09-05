@@ -9,11 +9,40 @@ from book.models import BookObject
 from customer.models import Customer
 from core.models import Basket
 from .serializers import BasketSerializer
+from .models import *
+from django.db import transaction
+import uuid
 # Create your views here.
 
 class Rent(APIView):
+
+    @transaction.atomic
     def post(self , request):
-        pass
+        customer = request.customer
+        #create Loan object
+        
+        loan_object = LoanModel.objects.create(borrower = customer)
+
+        book_objects = Basket.objects.filter(customer = customer).values('book_object__code')
+
+        loan_object.save()
+        
+        for book_object in book_objects:
+
+            code = book_object['book_object__code']
+
+            book_object = BookObject.objects.get(code = code)
+
+            loan_book = LoanBook.objects.create(loan = loan_object , book_object = book_object)
+
+            loan_book.save()
+
+        Basket.objects.filter(customer = customer).delete()
+
+        return Response("your reservation has been saved!" , status=201)
+
+       
+
 
 
 class AddToBasket(APIView):
@@ -39,7 +68,7 @@ class DeleteBasket(DestroyAPIView):
         if param == None:
             basket.delete()
             return JsonResponse({"msg":"deleted your current basket"})
-        print(param)
+        
         basket.delete_obj(param)
         return JsonResponse({"msg":"your object has been deleted successfully!"})
 

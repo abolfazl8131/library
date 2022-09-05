@@ -6,7 +6,7 @@ import threading
 class AbstractUserFieldsValidator:
     flag = True
     list_of_errors = []
-    
+    statements = ""
     def __init__(self , data) -> None:
         
         self.ID = data['ID']
@@ -50,7 +50,7 @@ class AbstractUserFieldsValidator:
         pass
 
     def position_validator(self):
-        if not self.position=="":
+        if not self.position==None:
             if self.position not in ['MS' , 'CA' , 'CL']:
                 self.flag = False
                 self.list_of_errors.append("please choose a postion exists in ['MS' , 'CA' , 'CL']")
@@ -94,27 +94,28 @@ class AbstractUserFieldsValidator:
 
 
     def run(self):
-        t1 = threading.Thread(target=self.ID_validator)
-        t2 = threading.Thread(target=self.phone_validator)
-        t3 = threading.Thread(target=self.name_validator)
-        t4 = threading.Thread(target=self.email_validator)
-        t5 = threading.Thread(target=self.birthdate_validator)
-        t6 = threading.Thread(target=self.position_validator)
+        # t1 = threading.Thread(target=self.ID_validator)
+        # t2 = threading.Thread(target=self.phone_validator)
+        # t3 = threading.Thread(target=self.name_validator)
+        # t4 = threading.Thread(target=self.email_validator)
+        # t5 = threading.Thread(target=self.birthdate_validator)
+        # t6 = threading.Thread(target=self.position_validator)
         
-        t1.start()
-        t2.start()
-        t3.start()
-        t4.start()
-        t5.start()
-        t6.start()
+        # t1.start()
+        # t2.start()
+        # t3.start()
+        # t4.start()
+        # t5.start()
+        # t6.start()
 
 
-        t1.join()
-        t2.join()
-        t3.join()
-        t4.join()
-        t5.join()
-        t6.join()
+        # t1.join()
+        # t2.join()
+        # t3.join()
+        # t4.join()
+        # t5.join()
+        # t6.join()
+        pass
 
 
 class AbstractUserQueryInterface:

@@ -7,7 +7,12 @@ from django.utils.deprecation import MiddlewareMixin
 class JWTMiddleWare(MiddlewareMixin):
 
     WHITELISTED_URLS = [
-        "/customer/profile/" , "/customer/update/" , "/core/basket/add/" , "/core/basket/delete/" , "/core/basket/get/"]
+        "/customer/profile/" ,
+         "/customer/update/" , 
+         "/core/basket/add/" , 
+         "/core/basket/delete/" , 
+         "/core/basket/get/" , 
+         "/core/loan/"]
 
     def process_request(self, request):
         

@@ -18,7 +18,7 @@ class BookBasket:
 
         except Exception as e:
             
-            return Http404
+            raise Http404
 
     def get(self):
         return self.basket.objects.filter(customer = self.customer)
@@ -29,7 +29,7 @@ class BookBasket:
             self.basket.objects.get(customer = self.customer , book_object = obj).delete()
             
         except Exception as e:
-            return Http404
+            raise Http404
 
 
     def delete(self):

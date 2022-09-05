@@ -12,5 +12,6 @@ urlpatterns = [
    path('leave-admin/' , LeaveAdmin.as_view()),
    path('query-admin/',FilterAdmins.as_view()),
    path('over-all-customer-views/' , OverallViewOnCustomers.as_view()),
-   path('query-customer/' , CustomerFilter.as_view())
+   path('query-customer/' , CustomerFilter.as_view()),
+   path('my-profile/', GetProfileAPIView.as_view())
 ]

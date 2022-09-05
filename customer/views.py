@@ -20,7 +20,7 @@ class SignUp(CreateAPIView):
 
             data = request.data
             validator = SignUpValidator(data)
-            validator.start()
+            validator.run()
             validator.model = Customer
             is_valid = validator.is_valid()
             if is_valid != True:

@@ -27,7 +27,7 @@ class GenreRegister(APIView):
         data = self.request.data
         genre = data['genre']
         validator = BookGenreVlidator(BookGenre)
-        validator.start()
+        validator.run()
         is_valid = validator.isvalid(genre)
         if not is_valid == True:
             return JsonResponse({"error":is_valid} , status = 400)
@@ -76,7 +76,7 @@ class ClassRegister(APIView):
         data = self.request.data
 
         validator = BookClassValidator(BookClass , BookGenre)
-        validator.start()
+        validator.run()
         is_valid = validator.isvalid(data['name'] , data['genre'])
 
         if not is_valid == True:
@@ -108,6 +108,7 @@ class GetBookClasses(ListAPIView):
             serializer = self.serializer_class(qs , many = True)
             return JsonResponse({"data":serializer.data})
         all_objects = BookClass.objects.all()
+
         serializer = self.serializer_class(all_objects , many = True)
         return JsonResponse({"data":serializer.data})
    

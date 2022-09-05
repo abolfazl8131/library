@@ -11,7 +11,7 @@ class IDCodeValidator:
         try:
             if Customer.objects.get(ID=self.ID):
                 return True
-        except:
-
+        except Exception as e:
+            print(e)
             return ["the customer with this ID code doesnt exist in database,,\
                 if you have registered in the system, it maybe happend for poor connection!"]

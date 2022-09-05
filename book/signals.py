@@ -11,8 +11,7 @@ from datetime import date
 @receiver(post_save , sender = BookObject)
 def create_book(sender,  instance, **kwargs):
     class_ = instance.book_class
-    q = BookObject.objects.filter(book_class__name = class_.name).count()
-    class_.quantity = q
+    class_.set_quantity()
     class_.save() 
     
 
@@ -20,6 +19,6 @@ def create_book(sender,  instance, **kwargs):
 @receiver(pre_delete , sender = BookObject)
 def delete_book(sender,  instance, **kwargs):
     class_ = instance.book_class
-    class_.decrease_quantity()
+    class_.set_quantity()
     class_.save() 
     

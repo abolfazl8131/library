@@ -6,7 +6,7 @@ services:
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=JvPFW1-6UBqsmu1jh1qTdV7qV4Pk3bta
+      - POSTGRES_PASSWORD=WZ4xt133iDjF0m6seMR7tRD-WU8uT-hA
 
   web:
     build: .

@@ -19,7 +19,7 @@ from django.views.decorators.cache import cache_page
 from shared_queries.advaned_data_query import AdvancedDataQuery
 from validator.customer_query_validator import CustomerQueryValidator
 from django.contrib.auth import get_user_model
-LibraryAdmin = get_user_model()
+#LibraryAdmin = get_user_model()
 # what master do with admin
 
 permissions = (IsActive , IsMaster)
@@ -28,7 +28,7 @@ CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 class SignUpAdmin(APIView):
     serializer_class = SignUpAdminSerializer
-    permission_classes = permissions
+    #permission_classes = permissions
 
     def post(self , format = None):
         data = self.request.data
@@ -161,7 +161,7 @@ class OverallViewOnAdmins(ListAPIView):
     def get_queryset(self):
 
         query = GetObjects(LibraryAdmin)
-        query.start()
+        query.run()
         return query.get_all()
 
     def get_object(self , **kwargs):
@@ -299,3 +299,7 @@ class CustomerFilter(APIView):
 
         return JsonResponse({"data":serializer.data})
 
+
+class GetProfileAPIView(APIView):
+    def get(self , request):
+        return JsonResponse({"first_name":request.user.first_name , "last_name":request.user.last_name , "position": request.user.position })

@@ -10,19 +10,17 @@ class LibraryAdminManager(BaseUserManager):
     
     def create_user(self, email , password , **extra_fields ):
 
-        print(1111111111111111111111)
-      
         user = self.model(
             
             admin_email = self.normalize_email(extra_fields['email']),
             **extra_fields 
-           
 
         )
         user.set_password(extra_fields['ID'])
         user.save()
         return user
 
+    
     
 
 
@@ -49,12 +47,10 @@ class LibraryAdmin(AbstractBaseUser):
     position = models.CharField(max_length=2, choices=Position.choices, default=Position.CLERK)
     is_active = models.BooleanField(default=True)
 
-   
-
     USERNAME_FIELD = 'ID'
 
     objects = LibraryAdminManager()
-
+    
     def get_position(self):
         return self.position
 

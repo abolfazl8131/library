@@ -8,8 +8,14 @@ class SignUpValidator(AbstractUserFieldsValidator):
 
         try:
             self.position = data['position']
+              
         except:
             self.position = None
 
 
-    
+        self.ID = data['ID']
+        self.first_name = data['first_name']
+        self.last_name = data['last_name']
+        self.phone_number = data['phone_number']
+        self.email = data["email"]
+        self.birth_date = data['birth_date']
