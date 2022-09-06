@@ -3,15 +3,15 @@ from django.urls import path, include
 from .views import *
 
 urlpatterns = [
-   path('new-admin/' , SignUpAdmin.as_view()),
-   path('update-admin/' ,UpdateAdmin.as_view()),
-   path('delete-admin/',DeleteAdmin.as_view()),
-   path('deactive/' , DeActivateAdmin.as_view()),
-   path('active/' , ActivateAdmin.as_view()),
-   path('over-all-admin-views/' , OverallViewOnAdmins.as_view()),
-   path('leave-admin/' , LeaveAdmin.as_view()),
-   path('query-admin/',FilterAdmins.as_view()),
+   path('admin/save/' , SignUpAdmin.as_view()),
+   path('admin/update/' ,UpdateAdmin.as_view()),
+   path('admin/delete/',DeleteAdmin.as_view()),
+   path('admin/deactivate/' , DeActivateAdmin.as_view()),
+   path('admin/activate/' , ActivateAdmin.as_view()),
+   path('admin/all/' , OverallViewOnAdmins.as_view()),
+   path('admin/leave/' , LeaveAdmin.as_view()),
+   path('admin/query/',FilterAdmins.as_view()),
    path('over-all-customer-views/' , OverallViewOnCustomers.as_view()),
    path('query-customer/' , CustomerFilter.as_view()),
-   path('my-profile/', GetProfileAPIView.as_view())
+   path('profile/', GetProfileAPIView.as_view())
 ]

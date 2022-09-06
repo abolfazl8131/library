@@ -65,7 +65,6 @@ class AbstractUserFieldsValidator:
             self.list_of_errors.append("Incorrect date format, should be YYYY-MM-DD")
 
 
-
     def email_validator(self):
         EMAIL_REGEX = re.compile(r"[^@\s]+@[^@\s]+\.[a-zA-Z0-9]+$")
 
@@ -94,28 +93,28 @@ class AbstractUserFieldsValidator:
 
 
     def run(self):
-        # t1 = threading.Thread(target=self.ID_validator)
-        # t2 = threading.Thread(target=self.phone_validator)
-        # t3 = threading.Thread(target=self.name_validator)
-        # t4 = threading.Thread(target=self.email_validator)
-        # t5 = threading.Thread(target=self.birthdate_validator)
-        # t6 = threading.Thread(target=self.position_validator)
+        t1 = threading.Thread(target=self.ID_validator)
+        t2 = threading.Thread(target=self.phone_validator)
+        t3 = threading.Thread(target=self.name_validator)
+        t4 = threading.Thread(target=self.email_validator)
+        t5 = threading.Thread(target=self.birthdate_validator)
+        t6 = threading.Thread(target=self.position_validator)
         
-        # t1.start()
-        # t2.start()
-        # t3.start()
-        # t4.start()
-        # t5.start()
-        # t6.start()
+        t1.start()
+        t2.start()
+        t3.start()
+        t4.start()
+        t5.start()
+        t6.start()
 
 
-        # t1.join()
-        # t2.join()
-        # t3.join()
-        # t4.join()
-        # t5.join()
-        # t6.join()
-        pass
+        t1.join()
+        t2.join()
+        t3.join()
+        t4.join()
+        t5.join()
+        t6.join()
+        
 
 
 class AbstractUserQueryInterface:

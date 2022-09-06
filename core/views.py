@@ -1,3 +1,6 @@
+import code
+from codecs import BOM
+from urllib import request
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework import serializers
@@ -12,6 +15,8 @@ from .serializers import BasketSerializer
 from .models import *
 from django.db import transaction
 import uuid
+from sub_view.loan_manager import LoanManager
+from sub_view.book_object_manager import BOM_ 
 # Create your views here.
 
 class Rent(APIView):
@@ -19,25 +24,13 @@ class Rent(APIView):
     @transaction.atomic
     def post(self , request):
         customer = request.customer
-        #create Loan object
         
-        loan_object = LoanModel.objects.create(borrower = customer)
-
-        book_objects = Basket.objects.filter(customer = customer).values('book_object__code')
-
-        loan_object.save()
         
-        for book_object in book_objects:
+        loan_manager = LoanManager()
+        loan_object = loan_manager.create(customer)
 
-            code = book_object['book_object__code']
-
-            book_object = BookObject.objects.get(code = code)
-
-            loan_book = LoanBook.objects.create(loan = loan_object , book_object = book_object)
-
-            loan_book.save()
-
-        Basket.objects.filter(customer = customer).delete()
+        bom = BOM_()
+        bom.save(loan_object , customer)
 
         return Response("your reservation has been saved!" , status=201)
 
@@ -83,8 +76,27 @@ class GetBasket(APIView):
         serializer.is_valid()
         return JsonResponse({"basket":serializer.data})
 
-class Resend(APIView):
-    pass
+
+class ReciveAPIView(APIView):
+    def post(self , format = None):
+        data = request.data
+        loan_manager = LoanManager()
+        loan_manager.delivered(data)
+        return JsonResponse({"msg":"saved!"})
+
+
+class EndRentAPIView(APIView):
+    def post(self , format = None):
+        data = request.data
+
+        loan_manager = LoanManager()
+        loan_manager.end(data)
+
+        bom = BOM_()
+        bom.availablity(data)
+        return JsonResponse({"msg":"saved"})
+
+ 
 
 class QuickViewOfLoans(ListAPIView):
     pass

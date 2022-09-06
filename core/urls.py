@@ -5,6 +5,6 @@ urlpatterns = [
     path('basket/add/' , AddToBasket.as_view()),
     path('basket/delete/' , DeleteBasket.as_view()),
     path('basket/get/' , GetBasket.as_view()),
-    path('loan/' ,Rent.as_view() )
+    path('rent/save/' ,Rent.as_view() ),
    
 ]
