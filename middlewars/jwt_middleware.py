@@ -12,7 +12,7 @@ class JWTMiddleWare(MiddlewareMixin):
          "/core/basket/add/" , 
          "/core/basket/delete/" , 
          "/core/basket/get/" , 
-         "/core/loan/"]
+         "/core/rent/save/"]
 
     def process_request(self, request):
         

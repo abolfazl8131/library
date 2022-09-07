@@ -19,10 +19,11 @@ from django.views.decorators.cache import cache_page
 from shared_queries.advaned_data_query import AdvancedDataQuery
 from validator.customer_query_validator import CustomerQueryValidator
 from django.contrib.auth import get_user_model
-#LibraryAdmin = get_user_model()
+
+LibraryAdmin = get_user_model()
 # what master do with admin
 
-permissions = (IsActive , IsMaster)
+#permissions = (IsActive , IsMaster)
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -54,7 +55,7 @@ class SignUpAdmin(APIView):
 
 
 class UpdateAdmin(UpdateAPIView):
-    permission_classes = permissions
+    permission_classes = []
     serializer_class = UpdateAdminSerializer
 
     def get_object(self , **kwargs):
@@ -79,7 +80,7 @@ class UpdateAdmin(UpdateAPIView):
         return JsonResponse({"data": serializer.data})
 
 class DeleteAdmin(DestroyAPIView):
-    permission_classes = permissions
+    permission_classes = []
 
     def get_object(self , **kwargs):
         
@@ -96,7 +97,7 @@ class DeleteAdmin(DestroyAPIView):
 
 
 class DeActivateAdmin(APIView):
-    permission_classes = permissions
+    permission_classes = []
 
     def get_object(self , **kwargs):
         
@@ -115,7 +116,7 @@ class DeActivateAdmin(APIView):
 
 
 class ActivateAdmin(APIView):
-    permission_classes = permissions
+    permission_classes = []
 
     def get_object(self , **kwargs):
         
@@ -131,7 +132,7 @@ class ActivateAdmin(APIView):
         return JsonResponse({"data":obj.is_active} , status = 200)
 
 class LeaveAdmin(APIView):
-    permission_classes = permissions
+    permission_classes = []
 
     def get_object(self , **kwargs):
 
@@ -155,7 +156,7 @@ class LeaveAdmin(APIView):
 
 class OverallViewOnAdmins(ListAPIView):
     serializer_class = GetAdminListSerializer
-    permission_classes = permissions
+    permission_classes = []
 
   
     def get_queryset(self):
@@ -194,7 +195,7 @@ class OverallViewOnAdmins(ListAPIView):
 
 class FilterAdmins(ListAPIView):
     serializer_class = GetAdminListSerializer
-    permission_classes = permissions
+    permission_classes = []
 
     def get_queryset(self , **kwargs):
 
@@ -227,7 +228,7 @@ class FilterAdmins(ListAPIView):
 from customer.serializers import *
 
 class OverallViewOnCustomers(APIView):
-    permission_classes = permissions
+    permission_classes = []
 
     serializer_class = GetCustomerSerializer
 
@@ -268,7 +269,7 @@ class OverallViewOnCustomers(APIView):
         
 
 class CustomerFilter(APIView):
-    permission_classes = permissions
+    permission_classes = []
 
     serializer_class = GetCustomerSerializer
 

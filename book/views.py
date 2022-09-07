@@ -15,11 +15,11 @@ from django.views.decorators.cache import cache_page
 # Create your views here.
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL')
-permissons = (IsActive , IsClerk)
+#permissons = (IsActive , IsClerk)
 
 class GenreRegister(APIView):
 
-    permission_classes = permissons
+    #permission_classes = permissons
     serializer_class = BookGenreSerializer
 
     def post(self , format = None):
@@ -50,7 +50,7 @@ class GenreFilter(ListAPIView):
 
 class DeleteGenre(DestroyAPIView):
     query_class = GetObjects(BookGenre)
-    permission_classes = permissons
+    #permission_classes = permissons
     def get_queryset(self , **kwargs):
         self.query_class.start()
         qs = self.query_class.get_object(**kwargs)
@@ -68,7 +68,7 @@ class DeleteGenre(DestroyAPIView):
 ###############################################################################################################################################
 
 class ClassRegister(APIView):
-    permission_classes = permissons
+    #permission_classes = permissons
     serializer_class = BookClassSerializer
 
     def post(self , format = None):
@@ -115,7 +115,7 @@ class GetBookClasses(ListAPIView):
 
 
 class ClassDelete(DestroyAPIView):
-    permission_classes = permissons
+    #permission_classes = permissons
     query_class = GetObjects(BookClass)
 
     def get_queryset(self , **kwargs):
@@ -135,7 +135,7 @@ class ClassDelete(DestroyAPIView):
 
 class ObjectRegister(APIView):
     serializer_class = BookObjectSerializer
-    permission_classes = permissons
+    #permission_classes = permissons
 
     def post(self , format = None):
         
@@ -143,6 +143,7 @@ class ObjectRegister(APIView):
 
         validator = BookObjectValidator(BookObject , BookClass)
         validator.run()
+        
         is_valid = validator.isvalid(data['code'] , data['book_class'] , data['date_published'] , data['published_no'])
 
         if not is_valid == True:
@@ -183,7 +184,7 @@ class GetBookObjectsWithSlug(ListAPIView):
 
 
 class ObjectDelete(DestroyAPIView):
-    permission_classes = permissons
+    #permission_classes = permissons
     query_class = GetObjects(BookObject)
 
     def get_queryset(self , **kwargs):

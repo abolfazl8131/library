@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from management.models import *
 from django.contrib.auth import get_user_model
-#LibraryAdmin = get_user_model()
+LibraryAdmin = get_user_model()
 
 class SignUpAdminSerializer(serializers.ModelSerializer):
 

@@ -15,8 +15,9 @@ from .serializers import BasketSerializer
 from .models import *
 from django.db import transaction
 import uuid
-from sub_view.loan_manager import LoanManager
-from sub_view.book_object_manager import BOM_ 
+from .serializers import RentObjectSerializer , RentListSerializer
+from core.sub_view.loan_manager import LoanManager
+from core.sub_view.book_object_manager import BOM_ 
 # Create your views here.
 
 class Rent(APIView):
@@ -96,7 +97,39 @@ class EndRentAPIView(APIView):
         bom.availablity(data)
         return JsonResponse({"msg":"saved"})
 
- 
+class AdminRentListAPIView(ListAPIView):
+    serializer_class = RentListSerializer
+
+    def get_queryset(self ):
+        qs = LoanModel.objects.all()
+        return qs
+
+    def get(self , request):
+        
+        qs = self.get_queryset()
+        serializer = self.serializer_class(data = qs , many = True)
+        serializer.is_valid()
+        return JsonResponse({"data":serializer.data})
+        
+
+class AdminGetRentObjectAPIView(RetrieveAPIView):
+    serializer_class = RentObjectSerializer
+
+    def get_object(self , id):
+        obj = LoanBook.objects.filter(id = id)
+        return obj
+
+    def get(self , request):
+        id = request.GET.get('id')
+        obj = self.get_object(id)
+        serializer = self.serializer_class(obj)
+        serializer.is_valid()
+        return JsonResponse({"data":serializer.data})
+
+
+
+        
+
 
 class QuickViewOfLoans(ListAPIView):
     pass

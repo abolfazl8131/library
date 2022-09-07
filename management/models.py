@@ -1,6 +1,6 @@
 from http import server
 from django.db import models
-from django.contrib.auth.base_user import AbstractBaseUser , BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 import enum
 from django.utils.translation import gettext_lazy as _
 from datetime import date
@@ -21,10 +21,6 @@ class LibraryAdminManager(BaseUserManager):
         return user
 
     
-    
-
-
-
 
 class Position(models.TextChoices):
     MASTER = 'MS', _('Master')
@@ -33,7 +29,7 @@ class Position(models.TextChoices):
         
 
 
-class LibraryAdmin(AbstractBaseUser):
+class LibraryAdmin(AbstractBaseUser , PermissionsMixin):
   
     ID = models.CharField(max_length=100, unique=True, db_index=True , default='SOME STRING')
     first_name = models.CharField(max_length=100 , default='SOME STRING')
