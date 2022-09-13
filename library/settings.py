@@ -53,9 +53,6 @@ INSTALLED_APPS = [
 
 ASGI_APPLICATION = 'library.asgi.application'
 
-AUTH_USER_MODEL = 'management.LibraryAdmin'
-
-CUSTOM_USER_MODEL = 'management.LibraryAdmin'
 
 MIDDLEWARE = [
 
@@ -74,6 +71,7 @@ MIDDLEWARE = [
     #'django.middleware.cache.FetchFromCacheMiddleware',
     
     'middlewars.jwt_middleware.JWTMiddleWare',
+    #'middlewars.admin_auth_middleware.AdminMiddleWare'
 
 ]
 

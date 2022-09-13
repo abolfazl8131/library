@@ -7,6 +7,6 @@ urlpatterns = [
     path('basket/get/' , GetBasket.as_view()),
     path('rent/save/' ,Rent.as_view() ),
     path('rent/list/admin' , AdminRentListAPIView.as_view()),
-    path('rent/get/' , AdminGetRentObjectAPIView.as_view() )
+    path('rent/get/admin' , AdminGetRentObjectAPIView.as_view() )
    
 ]

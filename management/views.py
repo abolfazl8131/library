@@ -1,3 +1,4 @@
+import re
 from rest_framework.response import Response
 from rest_framework import status
 from validator.admin_query_validator import AdminQueryValidator
@@ -20,10 +21,10 @@ from shared_queries.advaned_data_query import AdvancedDataQuery
 from validator.customer_query_validator import CustomerQueryValidator
 from django.contrib.auth import get_user_model
 
-LibraryAdmin = get_user_model()
+#LibraryAdmin = get_user_model()
 # what master do with admin
 
-#permissions = (IsActive , IsMaster)
+permissions = (IsActive , IsMaster)
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -36,17 +37,10 @@ class SignUpAdmin(APIView):
         validator = SignUpValidator(data)
         validator.run()
         validator.model = LibraryAdmin
-        is_valid = validator.is_valid()
-
-        if not is_valid == True:
-
-            return JsonResponse({"error" : is_valid} , status = 400)
-
-        
-
+        validator.is_valid()
         serializer = self.serializer_class(data = data)
 
-        serializer.is_valid(raise_exception = True)
+        serializer.is_valid()
 
         serializer.save()
 
@@ -55,7 +49,7 @@ class SignUpAdmin(APIView):
 
 
 class UpdateAdmin(UpdateAPIView):
-    permission_classes = []
+    permission_classes = permissions
     serializer_class = UpdateAdminSerializer
 
     def get_object(self , **kwargs):
@@ -68,11 +62,7 @@ class UpdateAdmin(UpdateAPIView):
         ID = request.GET.get('ID')
         validator = UpdateAdminValidator(data)
         validator.run()
-        is_valid = validator.is_valid()
-        
-        if not is_valid == True:
-            return JsonResponse({"error": is_valid} , status = 400)
-    
+        validator.is_valid()
         serializer = self.serializer_class(self.get_object(ID = ID),data = data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -80,7 +70,7 @@ class UpdateAdmin(UpdateAPIView):
         return JsonResponse({"data": serializer.data})
 
 class DeleteAdmin(DestroyAPIView):
-    permission_classes = []
+    permission_classes = permissions
 
     def get_object(self , **kwargs):
         
@@ -97,7 +87,7 @@ class DeleteAdmin(DestroyAPIView):
 
 
 class DeActivateAdmin(APIView):
-    permission_classes = []
+    permission_classes = permissions
 
     def get_object(self , **kwargs):
         
@@ -116,7 +106,7 @@ class DeActivateAdmin(APIView):
 
 
 class ActivateAdmin(APIView):
-    permission_classes = []
+    permission_classes = permissions
 
     def get_object(self , **kwargs):
         
@@ -132,7 +122,7 @@ class ActivateAdmin(APIView):
         return JsonResponse({"data":obj.is_active} , status = 200)
 
 class LeaveAdmin(APIView):
-    permission_classes = []
+    permission_classes = permissions
 
     def get_object(self , **kwargs):
 
@@ -156,7 +146,7 @@ class LeaveAdmin(APIView):
 
 class OverallViewOnAdmins(ListAPIView):
     serializer_class = GetAdminListSerializer
-    permission_classes = []
+    permission_classes = permissions
 
   
     def get_queryset(self):
@@ -195,12 +185,12 @@ class OverallViewOnAdmins(ListAPIView):
 
 class FilterAdmins(ListAPIView):
     serializer_class = GetAdminListSerializer
-    permission_classes = []
+    permission_classes = permissions
 
     def get_queryset(self , **kwargs):
 
         qs = AdvancedDataQuery(LibraryAdmin)
-        qs.start()
+        qs.run()
         return qs.data_query(**kwargs)
     
     @method_decorator(cache_page(CACHE_TTL))
@@ -210,15 +200,18 @@ class FilterAdmins(ListAPIView):
 
         params = dict(query_params.lists())
 
+        print(params.items())
+
         for k,v in params.items():
             params[k] = v[0]
+            
+            
+        
         validator = AdminQueryValidator(params)
         validator.run()
 
-        is_valid = validator.is_valid()
-        if not is_valid == True:
-            return JsonResponse({"error":is_valid} , status = 400)
-
+        validator.is_valid()
+    
         qs = self.get_queryset(**params)
 
         serializer = self.serializer_class(qs , many = True)
@@ -228,13 +221,13 @@ class FilterAdmins(ListAPIView):
 from customer.serializers import *
 
 class OverallViewOnCustomers(APIView):
-    permission_classes = []
+    permission_classes = permissions
 
     serializer_class = GetCustomerSerializer
 
     def get_queryset(self):
         qs = GetObjects(Customer)
-        qs.start()
+        qs.run()
         qs = qs.get_all()
         return qs
 
@@ -269,14 +262,14 @@ class OverallViewOnCustomers(APIView):
         
 
 class CustomerFilter(APIView):
-    permission_classes = []
+    permission_classes = permissions
 
     serializer_class = GetCustomerSerializer
 
     def get_queryset(self , **kwargs):
 
         qs = AdvancedDataQuery(Customer)
-        qs.start()
+        qs.run()
         return qs.data_query(**kwargs)
 
     @method_decorator(cache_page(CACHE_TTL))
@@ -290,10 +283,7 @@ class CustomerFilter(APIView):
         
         validator = CustomerQueryValidator(params)
         validator.run()
-        is_valid = validator.is_valid()
-        if not is_valid == True:
-            return JsonResponse({"error":is_valid} , status = 400)
-
+        validator.is_valid()
         qs = self.get_queryset(**params)
 
         serializer = self.serializer_class(qs , many = True)
@@ -303,4 +293,8 @@ class CustomerFilter(APIView):
 
 class GetProfileAPIView(APIView):
     def get(self , request):
-        return JsonResponse({"first_name":request.user.first_name , "last_name":request.user.last_name , "position": request.user.position })
+        print(request.user)
+        
+        return JsonResponse({"first_name":request.library_admin.first_name , 
+        "last_name":request.library_admin.last_name ,
+         "position": request.library_admin.position })

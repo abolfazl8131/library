@@ -1,18 +1,31 @@
 from rest_framework import permissions
+from management.models import LibraryAdmin
 
+class UnAuthorized(Exception):
+
+    pass
+        
 
 class IsActive(permissions.BasePermission):
 
     
 
     def has_permission(self, request, view):
+          
         try:
-            if request.user.is_active == True:
+            
+            user = request.user
+
+            admin = LibraryAdmin.objects.get(id = user.id)
+
+            if admin.is_active==True :
                 
                 return True
         
             return False
+
         except:
-            return False
+
+            raise UnAuthorized("please login!")
 
    

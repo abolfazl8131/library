@@ -2,4 +2,5 @@
 from validator.validators import AbstractUserQueryInterface
 
 class AdminQueryValidator(AbstractUserQueryInterface):
-    pass
+    def __init__(self, data: dict) -> None:
+        self.data = data

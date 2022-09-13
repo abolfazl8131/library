@@ -22,10 +22,8 @@ class SignUp(CreateAPIView):
             validator = SignUpValidator(data)
             validator.run()
             validator.model = Customer
-            is_valid = validator.is_valid()
-            if is_valid != True:
-                return JsonResponse({"error" : is_valid} , status = 400)
-
+            validator.is_valid()
+    
             serializer = self.serializer_class(data=data)
             serializer.is_valid()
             serializer.save()
@@ -36,7 +34,7 @@ class SignUp(CreateAPIView):
 
 
 class GetProfile(APIView):
-    permission_class = []
+    
 
     def get(self, request):
 
@@ -53,7 +51,7 @@ class GetProfile(APIView):
 
 class UpdateProfile(UpdateAPIView):
     serializer_class =  UpdateCustomerSerializer
-    permission_class = []
+    
 
     def get_queryset(self , **kwargs):
         query = GetObjects(Customer)
@@ -66,12 +64,7 @@ class UpdateProfile(UpdateAPIView):
         ID = self.request.customer.ID
         validator = UpdateCustomerValidator(data)
         validator.start()
-        is_valid = validator.is_valid()
-
-        if not is_valid == True:
-
-            return JsonResponse({"error" : is_valid} , status=400)
-        
+        validator.is_valid()
         serializer = self.serializer_class(self.get_queryset(ID = ID),data = data , partial = True)
         serializer.is_valid(raise_exception = True)
         serializer.save()

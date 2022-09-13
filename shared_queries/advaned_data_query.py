@@ -17,7 +17,6 @@ class AdvancedDataQuery:
                 pass 
         
         qs = self.model.objects.filter(**kwargs)
-       
         
         return qs
     

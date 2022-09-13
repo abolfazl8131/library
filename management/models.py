@@ -2,24 +2,10 @@ from http import server
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 import enum
+from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from datetime import date
 # Create your models here.
-
-class LibraryAdminManager(BaseUserManager):
-    
-    def create_user(self, email , password , **extra_fields ):
-
-        user = self.model(
-            
-            admin_email = self.normalize_email(extra_fields['email']),
-            **extra_fields 
-
-        )
-        user.set_password(extra_fields['ID'])
-        user.save()
-        return user
-
     
 
 class Position(models.TextChoices):
@@ -29,23 +15,15 @@ class Position(models.TextChoices):
         
 
 
-class LibraryAdmin(AbstractBaseUser , PermissionsMixin):
+class LibraryAdmin(User):
   
     ID = models.CharField(max_length=100, unique=True, db_index=True , default='SOME STRING')
-    first_name = models.CharField(max_length=100 , default='SOME STRING')
-    last_name = models.CharField(max_length=100 , default='SOME STRING')
     birth_date = models.DateField(null=True)
-    date_joined = models.DateField(null=True)
     date_left = models.DateField(null=True)
     left = models.BooleanField(default=False)
-    email = models.EmailField(default='SOME@STRING')
     phone_number = models.CharField(max_length=100 ,default='SOME STRING')
     position = models.CharField(max_length=2, choices=Position.choices, default=Position.CLERK)
-    is_active = models.BooleanField(default=True)
-
-    USERNAME_FIELD = 'ID'
-
-    objects = LibraryAdminManager()
+    
     
     def get_position(self):
         return self.position

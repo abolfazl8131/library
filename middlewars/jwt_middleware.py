@@ -8,11 +8,11 @@ class JWTMiddleWare(MiddlewareMixin):
 
     WHITELISTED_URLS = [
         "/customer/profile/" ,
-         "/customer/update/" , 
-         "/core/basket/add/" , 
-         "/core/basket/delete/" , 
-         "/core/basket/get/" , 
-         "/core/rent/save/"]
+        "/customer/update/" , 
+        "/core/basket/add/" , 
+        "/core/basket/delete/" , 
+        "/core/basket/get/" , 
+        "/core/rent/save/"]
 
     def process_request(self, request):
         

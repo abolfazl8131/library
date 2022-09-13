@@ -3,10 +3,16 @@ import datetime
 import re
 import threading
 
+class NotValid(Exception):
+
+    pass
+
+
 class AbstractUserFieldsValidator:
     flag = True
     list_of_errors = []
     statements = ""
+
     def __init__(self , data) -> None:
         
         self.ID = data['ID']
@@ -17,8 +23,6 @@ class AbstractUserFieldsValidator:
         self.birth_date = data['birth_date']
         self.position = data['position']
 
-
-        
 
     def is_valid(self):
         self.statements = {
@@ -36,8 +40,8 @@ class AbstractUserFieldsValidator:
         self.phone_validator()
 
         if self.flag == False:
-            return self.list_of_errors
-        return True
+            raise NotValid(self.list_of_errors)
+        pass
 
 
     def ID_validator(self):
@@ -138,9 +142,12 @@ class AbstractUserQueryInterface:
         self.admin_left_validator()
 
         if self.flag == False:
-            return self.list_of_errors
-        return True
+            
+            raise NotValid(self.list_of_errors)
+        pass
+
     def date_validator(self , data):
+        
         if data != "":
             try:
                 datetime.datetime.strptime(data, '%Y-%m-%d')
@@ -154,9 +161,6 @@ class AbstractUserQueryInterface:
         data = self.data['date_joined__gte']
         self.date_validator(data)
 
-
-
-    
     def admin_date_joined__lte_validator(self):
         data = self.data['date_joined__lte']
         self.date_validator(data)
@@ -164,14 +168,17 @@ class AbstractUserQueryInterface:
     def admin_left_validator(self):
         data = self.data['left']
         if data != "":
-            if not isinstance(data , bool):
+            data = bool(data)
+            if isinstance(data , bool) == False:
                 self.flag = False
                 self.list_of_errors.append("left is boolean (True or False)")
+            pass
         pass
 
     def admin_is_active_validator(self):
         data = self.data['is_active']
         if data != "":
+            data = bool(data)
             if isinstance(data , bool) == False:
                 self.flag = False
                 self.list_of_errors.append("is active is boolean data (True or False)")
@@ -191,34 +198,38 @@ class AbstractUserQueryInterface:
         self.date_validator(data)
 
     def admin_position_validator(self):
-        data = self.data['position']
-
-        self.date_validator(data)
+        pos = self.data['position']
+        if not pos=="":
+            if pos not in ['MS' , 'CA' , 'CL']:
+                self.flag = False
+                self.list_of_errors.append("please choose a postion exists in ['MS' , 'CA' , 'CL']")
+            pass
+        pass
     
     def run(self):
-        t1 = threading.Thread(target=self.admin_birth_date__in_validator)
-        t2 = threading.Thread(target=self.admin_date_joined__gte_validator)
-        t3 = threading.Thread(target=self.admin_date_joined__lte_validator)
-        t4 = threading.Thread(target=self.admin_date_left__gte_validator)
-        t5 = threading.Thread(target=self.admin_date_left__lte_validator)
-        t6 = threading.Thread(target=self.admin_is_active_validator)
-        t7 = threading.Thread(target=self.admin_left_validator)
-        t8 = threading.Thread(target=self.admin_position_validator)
-        t1.start()
-        t2.start()
-        t3.start()
-        t4.start()
-        t5.start()
-        t6.start()
-        t7.start()
-        t8.start()
+        # t1 = threading.Thread(target=self.admin_birth_date__in_validator)
+        # t2 = threading.Thread(target=self.admin_date_joined__gte_validator)
+        # t3 = threading.Thread(target=self.admin_date_joined__lte_validator)
+        # t4 = threading.Thread(target=self.admin_date_left__gte_validator)
+        # t5 = threading.Thread(target=self.admin_date_left__lte_validator)
+        # t6 = threading.Thread(target=self.admin_is_active_validator)
+        # t7 = threading.Thread(target=self.admin_left_validator)
+        # t8 = threading.Thread(target=self.admin_position_validator)
+        # t1.start()
+        # t2.start()
+        # t3.start()
+        # t4.start()
+        # t5.start()
+        # t6.start()
+        # t7.start()
+        # t8.start()
 
-        t1.join()
-        t2.join()
-        t3.join()
-        t4.join()
-        t5.join()
-        t6.join()
-        t7.join()
-        t8.join()
-
+        # t1.join()
+        # t2.join()
+        # t3.join()
+        # t4.join()
+        # t5.join()
+        # t6.join()
+        # t7.join()
+        # t8.join()
+        pass

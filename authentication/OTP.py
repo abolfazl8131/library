@@ -1,6 +1,6 @@
 import random
 import string
-from customer.tasks import *
+from customer.tasks import sms , email
 from customer.models import SignInCode, Customer
 import base64
 
@@ -38,10 +38,13 @@ class OTP:
     def generate_code(self):
 
         characters = list(string.ascii_letters + string.digits)
+
         random.shuffle(characters)
 
         password = []
+        
         for i in range(8):
+
             password.append(random.choice(characters))
 
         random.shuffle(password)
@@ -50,7 +53,9 @@ class OTP:
     
 
     def get_customer(self):
+
         customer = Customer.objects.get(ID=self.ID)
+
         return customer
 
 
