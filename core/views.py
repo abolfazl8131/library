@@ -1,5 +1,6 @@
 import code
 from codecs import BOM
+from doctest import master
 from urllib import request
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -82,7 +83,7 @@ class GetBasket(APIView):
 class ReciveAPIView(APIView):
     permission_classes = [IsClerk]
 
-    def post(self , format = None):
+    def patch(self , request,*args, **kwargs):
         data = request.data
         loan_manager = LoanManager()
         loan_manager.delivered(data)
@@ -93,7 +94,7 @@ class EndRentAPIView(APIView):
 
     permission_classes = [IsClerk]
 
-    def post(self , format = None):
+    def patch(self , request,*args, **kwargs):
         data = request.data
 
         loan_manager = LoanManager()
@@ -107,17 +108,8 @@ class AdminRentListAPIView(ListAPIView):
 
     serializer_class = RentListSerializer
     permission_classes = [IsClerk]
-
-    def get_queryset(self ):
-        qs = LoanModel.objects.all()
-        return qs
-
-    def get(self , request):
-        
-        qs = self.get_queryset()
-        serializer = self.serializer_class(data = qs , many = True)
-        serializer.is_valid()
-        return JsonResponse({"data":serializer.data})
+    queryset = LoanModel.objects.all()
+   
         
 
 class AdminGetRentObjectAPIView(RetrieveAPIView):

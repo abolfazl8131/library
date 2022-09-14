@@ -1,3 +1,4 @@
+from binhex import LINELEN
 import re
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,6 +14,7 @@ from .models import LibraryAdmin
 from validator.update_admin_validator import UpdateAdminValidator 
 from shared_queries.get_all_objects import GetObjects
 from permissions.is_active import IsActive
+from permissions.is_clerk import IsClerk
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.conf import settings
 from django.utils.decorators import method_decorator
@@ -274,6 +276,7 @@ class CustomerFilter(APIView):
 
     @method_decorator(cache_page(CACHE_TTL))
     def get(self , request):
+        
         query_params = request.GET
 
         params = dict(query_params.lists())
@@ -292,9 +295,15 @@ class CustomerFilter(APIView):
 
 
 class GetProfileAPIView(APIView):
+    permission_classes = [IsMaster | IsClerk]
+    
     def get(self , request):
-        print(request.user)
-        
-        return JsonResponse({"first_name":request.library_admin.first_name , 
-        "last_name":request.library_admin.last_name ,
-         "position": request.library_admin.position })
+        try:
+            user = request.user
+            library_admin = LibraryAdmin.objects.get(id = user.id)
+
+            return JsonResponse({"first_name":library_admin.first_name , 
+                    "last_name":library_admin.last_name ,
+                    "position":library_admin.position })
+        except Exception as e:
+            raise e

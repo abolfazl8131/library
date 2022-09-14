@@ -8,6 +8,7 @@ from .serializers import BookClassGetSerializer , BookClassSerializer , BookObje
 from shared_queries.get_all_objects import GetObjects 
 from permissions.is_active import IsActive
 from permissions.is_clerk import IsClerk
+from permissions.is_master import IsMaster
 from django.utils.decorators import method_decorator
 from django.conf import settings
 from django.views.decorators.cache import cache_page
@@ -15,7 +16,7 @@ from django.views.decorators.cache import cache_page
 # Create your views here.
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL')
-permissons = (IsActive , IsClerk)
+permissons = (IsActive , IsClerk | IsActive , IsMaster)
 
 class GenreRegister(APIView):
 

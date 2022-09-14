@@ -123,10 +123,10 @@ class BookObjectValidator:
 
     def run(self):
         t1 = threading.Thread(target=self.isvalid)
-        t2 = threading.Thread(target=self.date_validator())
-        t3 = threading.Thread(target=self.code_validator())
-        t4 = threading.Thread(target=self.published_no_validator())
-        t5 = threading.Thread(target=self.class_validator())
+        t2 = threading.Thread(target=self.date_validator)
+        t3 = threading.Thread(target=self.code_validator)
+        t4 = threading.Thread(target=self.published_no_validator)
+        t5 = threading.Thread(target=self.class_validator)
 
         t1.start()
         t2.start()

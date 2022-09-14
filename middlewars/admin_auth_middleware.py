@@ -17,22 +17,24 @@ class AdminMiddleWare(MiddlewareMixin):
     '/management/admin/query/',
     '/management/over-all-customer-views/' ,
     '/management/query-customer/' ,
-    '/management/profile/',]
+    '/management/profile/']
 
     def process_request(self, request) -> None:
         
         if request.path in self.WHITELISTED_URLS:
             user = request.user
+
             print(user)
+            
             try:
                 management = LibraryAdmin.objects.get(id = user.id)
                 
                 request.library_admin = management
 
-                print(request.library_admin.id)
+                print(request.library_admin)
 
             except Exception as e:
-                
+                print(e)
                 return JsonResponse({'error':'jwt expired!'} , status = 401)
         else:
             pass
