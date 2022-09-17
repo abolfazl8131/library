@@ -3,8 +3,8 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from validator.book.book_validator import BookObjectValidator ,BookClassValidator , BookGenreVlidator
 from .models import BookGenre ,BookClass , BookObject
-from rest_framework.generics import DestroyAPIView, ListAPIView
-from .serializers import BookClassGetSerializer , BookClassSerializer , BookObjectGetSerializer , BookObjectSerializer , BookGenreSerializer
+from rest_framework.generics import DestroyAPIView, ListAPIView , CreateAPIView
+from .serializers import BookClassGetSerializer , BookClassSerializer , BookObjectGetSerializer , BookObjectSerializer , BookGenreSerializer, BookImageSerializer
 from shared_queries.get_all_objects import GetObjects 
 from permissions.is_active import IsActive
 from permissions.is_clerk import IsClerk
@@ -53,7 +53,7 @@ class DeleteGenre(DestroyAPIView):
     query_class = GetObjects(BookGenre)
     permission_classes = permissons
     def get_queryset(self , **kwargs):
-        self.query_class.start()
+        self.query_class.run()
         qs = self.query_class.get_object(**kwargs)
         return qs
 
@@ -120,7 +120,7 @@ class ClassDelete(DestroyAPIView):
     query_class = GetObjects(BookClass)
 
     def get_queryset(self , **kwargs):
-        self.query_class.start()
+        self.query_class.run()
         qs = self.query_class.get_object(**kwargs)
         return qs
 
@@ -170,7 +170,9 @@ class GetBookObjectsWithSlug(ListAPIView):
         
         name = kwargs['name']
         
-        return self.model.objects.filter(book_class__name = name)
+        return self.model.objects.filter(book_class__name = name).prefetch_related('object_image')
+
+
 
     @method_decorator(cache_page(CACHE_TTL))
     def get(self , request , *args, **kwargs):
@@ -189,7 +191,7 @@ class ObjectDelete(DestroyAPIView):
     query_class = GetObjects(BookObject)
 
     def get_queryset(self , **kwargs):
-        self.query_class.start()
+        self.query_class.run()
         qs = self.query_class.get_object(**kwargs)
         return qs
 
@@ -200,4 +202,19 @@ class ObjectDelete(DestroyAPIView):
         qs.delete()
         return JsonResponse({"msg":"deleted!"})
        
+
+###########################################################################################################################
+
+class UploadImage(CreateAPIView):
+    serializer_class = BookImageSerializer
+
+    def post(self, request):
+        data = request.data
+
+        serializer = self.serializer_class(data = data)
+        serializer.is_valid(raise_exception= True)
+        serializer.save()
+
+        return JsonResponse(serializer.data)
+
 

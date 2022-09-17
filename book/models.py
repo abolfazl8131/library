@@ -1,8 +1,12 @@
 from pickle import TRUE
+from statistics import mode
 import unittest
 from django.db import models
 
 # Create your models here.
+
+
+
 class BookGenre(models.Model):
     genre = models.CharField(max_length = 100 , null = False , db_index = True , unique=True)
     
@@ -25,7 +29,6 @@ class BookClass(models.Model):
     
         
 
-
 class BookObject(models.Model):
     code = models.CharField(max_length = 102 , null = False , db_index = True , unique= True)
     date_published = models.DateField(default=None)
@@ -41,6 +44,13 @@ class BookObject(models.Model):
 
 
 
-    
+ 
+class BookImage(models.Model):
+    image = models.FileField(upload_to='images')
+    book_object = models.ForeignKey(BookObject , on_delete=models.CASCADE , related_name='object_image')  
+
+    def __unicode__(self):
+        return u"%s" % self.image
+     
 
     

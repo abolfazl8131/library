@@ -20,6 +20,7 @@ from .serializers import RentObjectSerializer , RentListSerializer
 from core.sub_view.loan_manager import LoanManager
 from core.sub_view.book_object_manager import BOM_ 
 from permissions.is_clerk import IsClerk
+from permissions.is_master import IsMaster
 # Create your views here.
 
 class Rent(APIView):
@@ -81,7 +82,7 @@ class GetBasket(APIView):
 
 
 class ReciveAPIView(APIView):
-    permission_classes = [IsClerk]
+    permission_classes = [IsClerk | IsMaster]
 
     def patch(self , request,*args, **kwargs):
         data = request.data
@@ -92,7 +93,7 @@ class ReciveAPIView(APIView):
 
 class EndRentAPIView(APIView):
 
-    permission_classes = [IsClerk]
+    permission_classes = [IsClerk | IsMaster]
 
     def patch(self , request,*args, **kwargs):
         data = request.data
@@ -107,33 +108,24 @@ class EndRentAPIView(APIView):
 class AdminRentListAPIView(ListAPIView):
 
     serializer_class = RentListSerializer
-    permission_classes = [IsClerk]
+    permission_classes = [IsClerk | IsMaster]
     queryset = LoanModel.objects.all()
    
         
 
 class AdminGetRentObjectAPIView(RetrieveAPIView):
     serializer_class = RentObjectSerializer
-    permission_classes = [IsClerk]
+    permission_classes = [IsClerk | IsMaster]
 
     def get_object(self , id):
-        obj = LoanBook.objects.filter(id = id)
+        obj = LoanBook.objects.filter(loan__id = id)
+        print(obj)
         return obj
 
     def get(self , request):
         id = request.GET.get('id')
         obj = self.get_object(id)
-        serializer = self.serializer_class(obj)
+        serializer = self.serializer_class(data = obj , many = True)
         serializer.is_valid()
         return JsonResponse({"data":serializer.data})
 
-
-
-        
-
-
-class QuickViewOfLoans(ListAPIView):
-    pass
-
-class LoanLogs(RetrieveAPIView):
-    pass

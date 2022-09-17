@@ -1,4 +1,5 @@
-from dataclasses import field
+from dataclasses import field, fields
+from pyexpat import model
 from statistics import mode
 from rest_framework import serializers
 from .models import *
@@ -42,9 +43,25 @@ class BookClassNestedSerializer(serializers.ModelSerializer):
         fields = ['name' , 'genre' , 'authors']
 
 
+class NestedBookImageSerializer(serializers.ModelSerializer):
+    image = serializers.FileField()
+    class Meta:
+        model = BookImage
+        fields = ['image']
+
+
 class BookObjectGetSerializer(serializers.ModelSerializer):
     book_class = BookClassNestedSerializer()
+    object_image = NestedBookImageSerializer(many = True)
     class Meta:
         model = BookObject
-        fields = ['code' , 'date_published' , 'published_no' , 'book_class' , 'available']
+        fields = ['code' , 'date_published' , 'published_no' , 'book_class' , 'available','object_image']
 
+
+#######################################################################################################
+
+class BookImageSerializer(serializers.ModelSerializer):
+    book_object = serializers.SlugRelatedField(queryset = BookObject.objects.all() , slug_field='code')
+    class Meta:
+        model = BookImage
+        fields = '__all__'

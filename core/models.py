@@ -6,6 +6,7 @@ import uuid
 # Create your models here.
 
 class LoanModel(models.Model):
+
     id = models.UUIDField(primary_key = True,default = uuid.uuid4,editable = False)
     borrower = models.ForeignKey(Customer , on_delete=models.CASCADE) 
     date_submitted = models.DateTimeField(null = True)

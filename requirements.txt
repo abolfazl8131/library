@@ -17,3 +17,4 @@ python-dotenv==0.20.0
 PyYAML==5.3.1
 redis==4.3.4
 psycopg2-binary
+pillow==9.2.0 

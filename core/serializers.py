@@ -3,6 +3,7 @@ from pyexpat import model
 from rest_framework import serializers
 from .models import Basket , LoanModel , LoanBook
 from book.serializers import BookObjectGetSerializer , BookObjectSerializer
+from customer.serializers import GetCustomerSerializer
 
 class BasketSerializer(serializers.ModelSerializer):
     book_object = BookObjectGetSerializer()
@@ -15,6 +16,7 @@ class BasketSerializer(serializers.ModelSerializer):
 
 
 class RentListSerializer(serializers.ModelSerializer):
+    borrower = GetCustomerSerializer()
     class Meta:
         model = LoanModel
         fields = '__all__'
@@ -23,6 +25,7 @@ class RentListSerializer(serializers.ModelSerializer):
 
 class RentObjectSerializer(serializers.ModelSerializer):
     loan = RentListSerializer()
+    book_object = BookObjectGetSerializer()
     class Meta:
         model = LoanBook
-        fields = ['book_object' , 'loan.borrower']
+        fields = ['book_object' , 'loan']

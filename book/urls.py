@@ -12,5 +12,7 @@ urlpatterns = [
    path('class/delete/' , ClassDelete.as_view()),
    path('object/save/' , ObjectRegister.as_view()),
    path('object/<str:name>', GetBookObjectsWithSlug.as_view()),
-   path('object/delete/', ObjectDelete.as_view())
+   path('object/delete/', ObjectDelete.as_view()),
+
+   path('image/load/' , UploadImage.as_view())
 ]
