@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.views import APIView
 from .serializers import SignUpSerializer , UpdateCustomerSerializer
-from authentication.OTP import OTP
+
 from shared_queries.get_all_objects import GetObjects
 from validator.signup_validators import SignUpValidator
 from validator.update_customer_validator import UpdateCustomerValidator
@@ -35,10 +35,8 @@ class SignUp(CreateAPIView):
 
 class GetProfile(APIView):
     
-
     def get(self, request):
 
-        
         return JsonResponse({
                 'ID':request.customer.ID , 
                 'firstname':request.customer.first_name , 
@@ -50,14 +48,13 @@ class GetProfile(APIView):
 
 
 class UpdateProfile(UpdateAPIView):
+
     serializer_class =  UpdateCustomerSerializer
     
-
     def get_queryset(self , **kwargs):
         query = GetObjects(Customer)
         query.start()
         return query.get_object(**kwargs)
-
 
     def patch(self , request):
         data = request.data

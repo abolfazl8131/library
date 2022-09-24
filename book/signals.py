@@ -1,11 +1,10 @@
-import time
-import datetime
-from django.db.models.signals import pre_save, post_save, pre_delete
-from django.dispatch import receiver
-from django.http import JsonResponse
 
-from .models import *
-from datetime import date
+from django.db.models.signals import post_save, pre_delete
+from django.dispatch import receiver
+
+
+from .models import BookObject
+
 
 
 @receiver(post_save , sender = BookObject)

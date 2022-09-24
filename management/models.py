@@ -1,7 +1,5 @@
-from http import server
+
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-import enum
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from datetime import date
@@ -23,6 +21,7 @@ class LibraryAdmin(User):
     left = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=100 ,default='SOME STRING')
     position = models.CharField(max_length=2, choices=Position.choices, default=Position.CLERK)
+    company = ''
     
     
     def get_position(self):

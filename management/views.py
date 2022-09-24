@@ -1,5 +1,4 @@
-from binhex import LINELEN
-import re
+
 from rest_framework.response import Response
 from rest_framework import status
 from validator.admin_query_validator import AdminQueryValidator
@@ -21,7 +20,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from shared_queries.advaned_data_query import AdvancedDataQuery
 from validator.customer_query_validator import CustomerQueryValidator
-from django.contrib.auth import get_user_model
+
 
 #LibraryAdmin = get_user_model()
 # what master do with admin
@@ -207,8 +206,6 @@ class FilterAdmins(ListAPIView):
         for k,v in params.items():
             params[k] = v[0]
             
-            
-        
         validator = AdminQueryValidator(params)
         validator.run()
 

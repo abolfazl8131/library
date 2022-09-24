@@ -1,10 +1,9 @@
-from dataclasses import fields
-from django.http import JsonResponse
-from rest_framework import serializers
-from rest_framework.response import Response
 
-from management.models import *
-from django.contrib.auth import get_user_model
+from rest_framework import serializers
+
+
+from management.models import LibraryAdmin
+
 #LibraryAdmin = get_user_model()
 
 class SignUpAdminSerializer(serializers.ModelSerializer):

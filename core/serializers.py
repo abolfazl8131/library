@@ -1,8 +1,7 @@
-from dataclasses import fields
-from pyexpat import model
+
 from rest_framework import serializers
 from .models import Basket , LoanModel , LoanBook
-from book.serializers import BookObjectGetSerializer , BookObjectSerializer
+from book.serializers import BookObjectGetSerializer 
 from customer.serializers import GetCustomerSerializer
 
 class BasketSerializer(serializers.ModelSerializer):

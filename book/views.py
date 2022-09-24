@@ -206,6 +206,8 @@ class ObjectDelete(DestroyAPIView):
 ###########################################################################################################################
 
 class UploadImage(CreateAPIView):
+
+    permission_classes = permissons
     serializer_class = BookImageSerializer
 
     def post(self, request):

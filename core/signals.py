@@ -1,9 +1,9 @@
-import time
+
 import datetime
-from django.db.models.signals import pre_save, post_save, pre_delete , post_delete
-from .models import LoanBook , LoanModel , Basket
+from django.db.models.signals import pre_save, post_save, post_delete
+from .models import LoanModel , Basket
 from django.dispatch import receiver
-import uuid
+
 
 
 @receiver(post_delete , sender = Basket)

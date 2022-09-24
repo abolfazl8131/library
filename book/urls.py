@@ -1,6 +1,15 @@
-from django.contrib import admin
-from django.urls import path, include
-from .views import *
+
+from django.urls import path
+from .views import (GenreRegister, 
+               GenreFilter, 
+               DeleteGenre,
+               ClassDelete,
+               ObjectDelete,
+               ClassRegister,
+               GetBookClasses,
+               ObjectRegister,
+               GetBookObjectsWithSlug,
+               UploadImage)
 
 urlpatterns = [
    path('genre/save/' , GenreRegister.as_view()),

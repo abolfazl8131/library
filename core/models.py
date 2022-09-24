@@ -1,7 +1,7 @@
 
 from django.db import models
-from customer.models import *
-from book.models import *
+from customer.models import Customer
+from book.models import BookObject
 import uuid
 # Create your models here.
 
@@ -12,6 +12,7 @@ class LoanModel(models.Model):
     date_submitted = models.DateTimeField(null = True)
     delivered = models.BooleanField(default=False)
     end_rent = models.BooleanField(default=False)
+    company = ""
 
     def is_delivered(self):
         self.delivered = True
@@ -23,6 +24,7 @@ class LoanModel(models.Model):
 class LoanBook(models.Model):
     loan = models.ForeignKey(LoanModel , on_delete=models.CASCADE)
     book_object = models.ForeignKey(BookObject , on_delete=models.PROTECT)
+    company = ""
     
 
 class Basket(models.Model):

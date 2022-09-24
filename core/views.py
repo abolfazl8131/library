@@ -1,21 +1,17 @@
-import code
-from codecs import BOM
-from doctest import master
-from urllib import request
-from django.shortcuts import render
+
 from django.http import JsonResponse
-from rest_framework import serializers
+
 from rest_framework.response import Response
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView, ListAPIView
+from rest_framework.generics import  RetrieveAPIView, DestroyAPIView, ListAPIView
 from rest_framework.views import APIView
 from bookbasket.basket import BookBasket
 from book.models import BookObject
-from customer.models import Customer
+
 from core.models import Basket
 from .serializers import BasketSerializer
 from .models import *
 from django.db import transaction
-import uuid
+
 from .serializers import RentObjectSerializer , RentListSerializer
 from core.sub_view.loan_manager import LoanManager
 from core.sub_view.book_object_manager import BOM_ 
