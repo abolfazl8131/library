@@ -18,6 +18,8 @@ class IsMaster(permissions.BasePermission):
                 return True
         
             return False
+
+           
         except:
             raise UnAuthorized("please login!")
   

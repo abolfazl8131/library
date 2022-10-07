@@ -13,5 +13,14 @@ urlpatterns = [
    path('admin/query/',FilterAdmins.as_view()),
    path('over-all-customer-views/' , OverallViewOnCustomers.as_view()),
    path('query-customer/' , CustomerFilter.as_view()),
-   path('profile/', GetProfileAPIView.as_view())
+   path('profile/', GetProfileAPIView.as_view()),
+   path('admin/master/register/', RegisterMasterOfCompany.as_view())
 ]
+
+
+
+
+
+
+
+

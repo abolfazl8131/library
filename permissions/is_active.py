@@ -1,3 +1,4 @@
+from re import T
 from rest_framework import permissions
 from management.models import LibraryAdmin
 
@@ -24,8 +25,10 @@ class IsActive(permissions.BasePermission):
         
             return False
 
-        except:
+            
 
+        except Exception as e:
+            print(e)
             raise UnAuthorized("please login!")
 
    

@@ -1,13 +1,13 @@
 
 from django.db import models
-
+from company.models import Company
 # Create your models here.
 
 
 
 class BookGenre(models.Model):
     genre = models.CharField(max_length = 100 , null = False , db_index = True , unique=True)
-    company = ""
+    
     
 
 class BookClass(models.Model):
@@ -15,6 +15,7 @@ class BookClass(models.Model):
     genre = models.ForeignKey(BookGenre , on_delete = models.PROTECT)
     authors = models.TextField(null = True)
     quantity = models.IntegerField(default=0)
+    
 
     def increase_quantity(self):
         self.quantity += 1
@@ -34,6 +35,7 @@ class BookObject(models.Model):
     published_no = models.SmallIntegerField(default=1)
     book_class = models.ForeignKey(BookClass , on_delete = models.PROTECT)
     available = models.BooleanField(default=True)
+    company = models.ForeignKey(Company , on_delete = models.CASCADE , null = True)
 
     def unavailable(self):
         self.available = False

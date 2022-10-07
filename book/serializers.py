@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from .models import BookObject, BookClass, BookGenre, BookImage
 
-
+from company.serializers import CompanySerializer
 
 
 class BookClassSerializer(serializers.ModelSerializer):
@@ -30,7 +30,7 @@ class BookObjectSerializer(serializers.ModelSerializer):
     book_class = serializers.SlugRelatedField(queryset = BookClass.objects.all() , slug_field='name')
     class Meta:
         model = BookObject
-        fields = ['code' , 'date_published' , 'published_no' , 'book_class']
+        fields = ['code' , 'date_published' , 'published_no' , 'book_class' , 'company']
 
 
 ##############################################################################################
@@ -51,9 +51,10 @@ class NestedBookImageSerializer(serializers.ModelSerializer):
 class BookObjectGetSerializer(serializers.ModelSerializer):
     book_class = BookClassNestedSerializer()
     object_image = NestedBookImageSerializer(many = True)
+    company = CompanySerializer()
     class Meta:
         model = BookObject
-        fields = ['code' , 'date_published' , 'published_no' , 'book_class' , 'available','object_image']
+        fields = ['code' , 'date_published' , 'published_no' , 'book_class' , 'available','object_image' , 'company']
 
 
 #######################################################################################################

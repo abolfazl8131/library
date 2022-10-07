@@ -1,5 +1,5 @@
 
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.signals import post_save, pre_delete , post_delete
 from django.dispatch import receiver
 
 
@@ -15,7 +15,7 @@ def create_book(sender,  instance, **kwargs):
     
 
 
-@receiver(pre_delete , sender = BookObject)
+@receiver(post_delete , sender = BookObject)
 def delete_book(sender,  instance, **kwargs):
     class_ = instance.book_class
     class_.set_quantity()

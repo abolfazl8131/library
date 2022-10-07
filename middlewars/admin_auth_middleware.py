@@ -4,7 +4,12 @@ from customer.models import Customer
 from django.http import JsonResponse
 from django.utils.deprecation import MiddlewareMixin
 from management.models import LibraryAdmin
- 
+
+
+def set_library_admin():
+    pass
+
+
 class AdminMiddleWare(MiddlewareMixin):
 
     WHITELISTED_URLS = ['/admin/save/',
@@ -17,9 +22,10 @@ class AdminMiddleWare(MiddlewareMixin):
     '/management/admin/query/',
     '/management/over-all-customer-views/' ,
     '/management/query-customer/' ,
-    '/management/profile/']
+    #'/management/profile/'
+    ]
 
-    def process_request(self, request) -> None:
+    def process_request(self, request):
         
         if request.path in self.WHITELISTED_URLS:
             user = request.user

@@ -1,8 +1,10 @@
 
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from datetime import date
+from company.models import Company
 # Create your models here.
     
 
@@ -21,7 +23,7 @@ class LibraryAdmin(User):
     left = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=100 ,default='SOME STRING')
     position = models.CharField(max_length=2, choices=Position.choices, default=Position.CLERK)
-    company = ''
+    company = models.ForeignKey(Company , on_delete = models.CASCADE, null = True)
     
     
     def get_position(self):

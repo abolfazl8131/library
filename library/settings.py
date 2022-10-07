@@ -16,14 +16,15 @@ from dotenv import load_dotenv
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-os.environ['DJANGO_SETTINGS_MODULE']
+#os.environ['DJANGO_SETTINGS_MODULE']
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.environ.get("SECRET_KEY"))
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = str(os.environ.get('DEBUG'))
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1',  '0.0.0.0']
 
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_celery_results',
     'django_crontab',
+    'drf_yasg',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
@@ -47,6 +49,8 @@ INSTALLED_APPS = [
     'customer',
     'book',
     'authentication',
+    'company',
+   
     
 
 ]
@@ -75,9 +79,11 @@ MIDDLEWARE = [
 
 ]
 
-REDIS_HOST = str(os.environ.get("REDISHOST"))
+REDIS_HOST = str(os.environ.get("REDIS_HOST"))
 
-REDIS_PORT = os.environ.get("REDISPORT")
+REDIS_PORT = os.environ.get("REDIS_PORT")
+
+REDIS_PASSWORD = str(os.environ.get("REDIS_PASSWORD"))
 
 INTERNAL_IPS = [str(os.environ.get("LOCALHOST"))]
 
@@ -101,6 +107,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         #"rest_framework.authentication.TokenAuthentication",
     ],
+
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10

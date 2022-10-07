@@ -43,7 +43,7 @@ class OTP:
 
         password = []
         
-        for i in range(8):
+        for _ in range(8):
 
             password.append(random.choice(characters))
 

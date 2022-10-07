@@ -4,7 +4,7 @@ from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.views import APIView
 from .serializers import SignUpSerializer , UpdateCustomerSerializer
 
-from shared_queries.get_all_objects import GetObjects
+from shared_queries.get_all_objects import GetManagementObjects
 from validator.signup_validators import SignUpValidator
 from validator.update_customer_validator import UpdateCustomerValidator
 from .models import Customer 
@@ -51,10 +51,9 @@ class UpdateProfile(UpdateAPIView):
 
     serializer_class =  UpdateCustomerSerializer
     
-    def get_queryset(self , **kwargs):
-        query = GetObjects(Customer)
-        query.start()
-        return query.get_object(**kwargs)
+    def get_object(self , **kwargs):
+        
+        return Customer.objects.get(**kwargs)
 
     def patch(self , request):
         data = request.data
@@ -62,7 +61,7 @@ class UpdateProfile(UpdateAPIView):
         validator = UpdateCustomerValidator(data)
         validator.start()
         validator.is_valid()
-        serializer = self.serializer_class(self.get_queryset(ID = ID),data = data , partial = True)
+        serializer = self.serializer_class(self.get_object(ID = ID),data = data , partial = True)
         serializer.is_valid(raise_exception = True)
         serializer.save()
         return JsonResponse(serializer.data , status = 201)
