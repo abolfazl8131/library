@@ -1,4 +1,5 @@
 
+from attr import fields
 from rest_framework import serializers
 from .models import Basket , LoanModel , LoanBook
 from book.serializers import BookObjectGetSerializer 
@@ -13,9 +14,14 @@ class BasketSerializer(serializers.ModelSerializer):
             'customer': {'write_only': True}, 
         }
 
+class LoanModelNestedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LoanModel
+        fields = '__all__'
 
 class RentListSerializer(serializers.ModelSerializer):
     borrower = GetCustomerSerializer()
+   
     class Meta:
         model = LoanModel
         fields = '__all__'

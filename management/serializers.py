@@ -58,5 +58,4 @@ class GetAdminListSerializer(serializers.ModelSerializer):
         'phone_number' ,
         'is_active',
         'left',
-        'position','company']
-
+        'position']

@@ -24,6 +24,7 @@ from validator.customer_query_validator import CustomerQueryValidator
 from company.serializers import CompanySerializer
 from django.core import serializers as generic_serializer
 from shared_queries.lib_admin_middleware import find_library_admin
+from company.serializers import CompanySerializer
 #LibraryAdmin = get_user_model()
 # what master do with admin
 
@@ -116,7 +117,7 @@ class DeActivateAdmin(APIView):
     #add other permission
     def get_object(self , **kwargs):
         
-        query = GetObjects(LibraryAdmin , find_library_admin(self.request.user.id).company)
+        query = GetManagementObjects(LibraryAdmin , find_library_admin(self.request.user.id).company)
         query.run()
         return query.get_object(**kwargs)
 
@@ -136,7 +137,7 @@ class ActivateAdmin(APIView):
     #add other permission
     def get_object(self , **kwargs):
         
-        query = GetObjects(LibraryAdmin , find_library_admin(self.request.user.id).company)
+        query = GetManagementObjects(LibraryAdmin , find_library_admin(self.request.user.id).company)
         query.run()
         return query.get_object(**kwargs)
 
@@ -153,7 +154,7 @@ class LeaveAdmin(APIView):
     #add other permission
     def get_object(self , **kwargs):
         lib_master = find_library_admin(self.request.user.id)
-        query = GetObjects(LibraryAdmin , lib_master.company)
+        query = GetManagementObjects(LibraryAdmin , lib_master.company)
         query.run()
         return query.get_object(**kwargs)
 
@@ -169,7 +170,6 @@ class LeaveAdmin(APIView):
 
 #########################################################################################################################################################
 
-# the methods will be declared on shared_views module!
 
 
 class OverallViewOnAdmins(ListAPIView):
@@ -179,13 +179,13 @@ class OverallViewOnAdmins(ListAPIView):
   
     def get_queryset(self):
         lib_master = find_library_admin(self.request.user.id)
-        query = GetObjects(LibraryAdmin , lib_master.company)
+        query = GetManagementObjects(LibraryAdmin , lib_master.company)
         query.run()
         return query.get_all()
 
     def get_object(self , **kwargs):
         lib_master = find_library_admin(self.request.user.id)
-        query = GetObjects(LibraryAdmin , lib_master.company)
+        query = GetManagementObjects(LibraryAdmin , lib_master.company)
         query.run()
         return query.get_object(**kwargs)
 
@@ -243,6 +243,9 @@ class FilterAdmins(ListAPIView):
         serializer = self.serializer_class(qs , many = True)
 
         return JsonResponse({"data":serializer.data})
+
+
+        
 #################################################################################################################3
 from customer.serializers import *
 
@@ -252,18 +255,15 @@ class OverallViewOnCustomers(ListAPIView):
     serializer_class = GetCustomerSerializer
 
     def get_queryset(self):
-        lib_master = find_library_admin(self.request.user.id)
-        qs = GetObjects(Customer,lib_master.company)
-        qs.run()
-        qs = qs.get_all()
+
+        qs = Customer.objects.prefetch_related('renter__loan_model').\
+            filter(renter__loan_model__book_object__company = find_library_admin(self.request.user.id).company)
         return qs
 
     def get_object(self , **kwargs):
-        lib_master = find_library_admin(self.request.user.id)
-        obj = GetObjects(Customer,lib_master.company)
-        obj.run()
-        obj = obj.get_object(**kwargs)
-        return obj
+        qs = Customer.objects.prefetch_related('renter__loan_model').\
+            filter(renter__loan_model__book_object__company = find_library_admin(self.request.user.id).company , **kwargs)
+        return qs
 
     @method_decorator(cache_page(CACHE_TTL))
     def get(self , request):
@@ -289,43 +289,46 @@ class OverallViewOnCustomers(ListAPIView):
 
         
 
-class CustomerFilter(APIView):
-    permission_classes = permissions
+# class CustomerFilter(APIView):
+#     permission_classes = permissions
 
-    serializer_class = GetCustomerSerializer
+#     serializer_class = GetCustomerSerializer
 
-    def get_queryset(self , **kwargs):
+#     def get_queryset(self , **kwargs):
 
-        qs = AdvancedDataQuery(Customer)
-        qs.run()
-        kwargs['company'] = find_library_admin(self.request.user.id)
-        return qs.data_query(**kwargs)
+#         qs = AdvancedDataQuery(Customer)
+#         qs.run()
+#         kwargs['company'] = find_library_admin(self.request.user.id)
+#         return qs.data_query(**kwargs)
 
-    @method_decorator(cache_page(CACHE_TTL))
-    def get(self , request):
+#     @method_decorator(cache_page(CACHE_TTL))
+#     def get(self , request):
         
-        query_params = request.GET
+#         query_params = request.GET
 
-        params = dict(query_params.lists())
+#         params = dict(query_params.lists())
 
-        for k,v in params.items():
+#         for k,v in params.items():
 
-            params[k] = v[0]
+#             params[k] = v[0]
         
-        validator = CustomerQueryValidator(params)
+#         validator = CustomerQueryValidator(params)
 
-        validator.run()
+#         validator.run()
 
-        validator.is_valid()
+#         validator.is_valid()
 
-        qs = self.get_queryset(**params)
+#         qs = self.get_queryset(**params)
 
-        serializer = self.serializer_class(qs , many = True)
+#         serializer = self.serializer_class(qs , many = True)
 
-        return JsonResponse({"data":serializer.data})
+#         return JsonResponse({"data":serializer.data})
+
+
 ###############################################################################################################################
 
-class GetProfileAPIView(APIView):
+
+class GetProfileAPIView(RetrieveAPIView):
     permission_classes = [IsMaster | IsClerk]
 
     
@@ -335,13 +338,14 @@ class GetProfileAPIView(APIView):
 
             library_admin = LibraryAdmin.objects.get(id = user.id)
 
+            serialized_company = CompanySerializer(library_admin.company)
+
+            print(serialized_company.data)
+
             return JsonResponse({"first_name":library_admin.first_name , 
                     "last_name":library_admin.last_name ,
-                    "position":library_admin.position, "company_name":library_admin.company.name})
+                    "position":library_admin.position, "company_name":serialized_company.data , "is_active":library_admin.is_active})
                     
         except Exception as e:
             raise e
 
-
-class MyCompanyAPIView(RetrieveAPIView):
-    pass

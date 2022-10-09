@@ -8,7 +8,7 @@ import uuid
 class LoanModel(models.Model):
 
     id = models.UUIDField(primary_key = True,default = uuid.uuid4,editable = False)
-    borrower = models.ForeignKey(Customer , on_delete=models.CASCADE) 
+    borrower = models.ForeignKey(Customer , on_delete=models.CASCADE , related_name = 'renter') 
     date_submitted = models.DateTimeField(null = True)
     delivered = models.BooleanField(default=False)
     end_rent = models.BooleanField(default=False)
@@ -22,8 +22,8 @@ class LoanModel(models.Model):
 
 
 class LoanBook(models.Model):
-    loan = models.ForeignKey(LoanModel , on_delete=models.CASCADE)
-    book_object = models.ForeignKey(BookObject , on_delete=models.PROTECT)
+    loan = models.ForeignKey(LoanModel , on_delete=models.CASCADE , related_name='loan_model')
+    book_object = models.ForeignKey(BookObject , on_delete=models.PROTECT , related_name = 'book_obj')
     
 
 class Basket(models.Model):

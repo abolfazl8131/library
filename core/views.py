@@ -17,6 +17,8 @@ from core.sub_view.loan_manager import LoanManager
 from core.sub_view.book_object_manager import BOM_ 
 from permissions.is_clerk import IsClerk
 from permissions.is_master import IsMaster
+from permissions.is_active import IsActive
+from shared_queries.lib_admin_middleware import find_library_admin
 # Create your views here.
 
 class Rent(APIView):
@@ -78,7 +80,7 @@ class GetBasket(APIView):
 
 
 class ReciveAPIView(APIView):
-    permission_classes = [IsClerk | IsMaster]
+    permission_classes = [IsClerk & IsActive| IsMaster & IsActive]
 
     def patch(self , request,*args, **kwargs):
         data = request.data
@@ -89,7 +91,7 @@ class ReciveAPIView(APIView):
 
 class EndRentAPIView(APIView):
 
-    permission_classes = [IsClerk | IsMaster]
+    permission_classes = [IsClerk & IsActive| IsMaster & IsActive]
 
     def patch(self , request,*args, **kwargs):
         data = request.data
@@ -104,24 +106,23 @@ class EndRentAPIView(APIView):
 class AdminRentListAPIView(ListAPIView):
 
     serializer_class = RentListSerializer
-    permission_classes = [IsClerk | IsMaster]
-    queryset = LoanModel.objects.all()
+    permission_classes = [IsClerk & IsActive| IsMaster & IsActive]
+    
+
+    def get_queryset(self):
+        return LoanModel.objects.prefetch_related('loan_model').filter(loan_model__book_object__company = find_library_admin(self.request.user.id).company)
+        
    
         
 
 class AdminGetRentObjectAPIView(RetrieveAPIView):
     serializer_class = RentObjectSerializer
-    permission_classes = [IsClerk | IsMaster]
+    permission_classes = [IsClerk & IsActive| IsMaster & IsActive]
 
-    def get_object(self , id):
-        obj = LoanBook.objects.filter(loan__id = id)
-        print(obj)
+    def get_object(self ):
+        id = self.request.GET.get('id')
+        obj = LoanBook.objects.filter(loan__id = id , book_object__company = find_library_admin(self.request.user.id).company)
         return obj
 
-    def get(self , request):
-        id = request.GET.get('id')
-        obj = self.get_object(id)
-        serializer = self.serializer_class(data = obj , many = True)
-        serializer.is_valid()
-        return JsonResponse({"data":serializer.data})
+ 
 
