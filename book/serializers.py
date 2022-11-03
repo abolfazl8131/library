@@ -60,7 +60,13 @@ class BookObjectGetSerializer(serializers.ModelSerializer):
 #######################################################################################################
 
 class BookImageSerializer(serializers.ModelSerializer):
+
     book_object = serializers.SlugRelatedField(queryset = BookObject.objects.all() , slug_field='code')
+
     class Meta:
+
         model = BookImage
+
         fields = '__all__'
+
+       

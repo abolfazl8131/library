@@ -2,7 +2,7 @@
 from django.http import JsonResponse
 
 from rest_framework.response import Response
-from rest_framework.generics import  RetrieveAPIView, DestroyAPIView, ListAPIView
+from rest_framework.generics import  RetrieveAPIView, DestroyAPIView, ListAPIView,CreateAPIView
 from rest_framework.views import APIView
 from bookbasket.basket import BookBasket
 from book.models import BookObject
@@ -21,7 +21,7 @@ from permissions.is_active import IsActive
 from shared_queries.lib_admin_middleware import find_library_admin
 # Create your views here.
 
-class Rent(APIView):
+class Rent(CreateAPIView):
     
     @transaction.atomic
     def post(self , request):
@@ -68,7 +68,7 @@ class DeleteBasket(DestroyAPIView):
         return JsonResponse({"msg":"your object has been deleted successfully!"})
 
 
-class GetBasket(APIView):
+class GetBasket(RetrieveAPIView):
 
     serializer_class = BasketSerializer
 

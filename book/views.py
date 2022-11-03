@@ -13,13 +13,13 @@ from permissions.is_master import IsMaster
 from django.utils.decorators import method_decorator
 from django.conf import settings
 from django.views.decorators.cache import cache_page
-
+from .recommendor import test
 # Create your views here.
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL')
 permissons = [IsActive , IsClerk | IsActive , IsMaster]
 
-class GenreRegister(APIView):
+class GenreRegister(CreateAPIView):
 
     permission_classes = permissons
     serializer_class = BookGenreSerializer
@@ -78,7 +78,7 @@ class DeleteGenre(DestroyAPIView):
         
 ###############################################################################################################################################
 
-class ClassRegister(APIView):
+class ClassRegister(CreateAPIView):
     permission_classes = permissons
     serializer_class = BookClassSerializer
 
@@ -108,6 +108,37 @@ class ClassRegister(APIView):
     
 
 
+class FilterBookClassesWithCompany(ListAPIView):
+    serializer_class = BookClassGetSerializer
+
+    def get_queryset(self , **kwargs):
+       
+        return BookClass.objects.prefetch_related('book_class').filter(**kwargs)
+
+
+    @method_decorator(cache_page(CACHE_TTL))
+    def get(self , request):
+        query_params = self.request.GET
+
+        params = dict(query_params.lists())
+
+            
+        for k,v in list(params.items()):
+            if v[0] != '':
+                params[k] = v[0]
+            else:
+                params.pop(k)
+        print(params)
+
+        qs = self.get_queryset(**params)
+        print(qs)
+
+        serialized_data = self.serializer_class(qs , many = True)
+       
+        return JsonResponse({"data":serialized_data.data})
+    
+
+
 class GetBookClasses(ListAPIView):
     serializer_class = BookClassGetSerializer
 
@@ -118,15 +149,20 @@ class GetBookClasses(ListAPIView):
 
     @method_decorator(cache_page(CACHE_TTL))
     def get(self , request):
-        genre = request.GET.get('genre')
-        if not genre == "":
-            qs = self.get_queryset(genre)
-            serializer = self.serializer_class(qs , many = True)
-            return JsonResponse({"data":serializer.data})
-        all_objects = BookClass.objects.all()
 
-        serializer = self.serializer_class(all_objects , many = True)
-        return JsonResponse({"data":serializer.data})
+        if request.user != None:
+            genre = request.GET.get('genre')
+            if not genre == "":
+                qs = self.get_queryset(genre)
+                serializer = self.serializer_class(qs , many = True)
+                return JsonResponse({"data":serializer.data})
+            all_objects = BookClass.objects.all()
+
+            serializer = self.serializer_class(all_objects , many = True)
+            return JsonResponse({"data":serializer.data})
+        else:
+            # recommend a book with allgorithm
+            pass
    
 
 
@@ -145,9 +181,16 @@ class ClassDelete(DestroyAPIView):
             return JsonResponse({"msg":"deleted!"})
         except:
             return JsonResponse({"error":"we cant delete this class because the is a hard relation between this class and some book objects!"} , status = 400)
+
+
 ##########################################################################################################################3
+
+
 from shared_queries.lib_admin_middleware import find_library_admin
-class ObjectRegister(APIView):
+
+
+class ObjectRegister(CreateAPIView):
+
     serializer_class = BookObjectSerializer
     permission_classes = permissons
 
@@ -155,18 +198,18 @@ class ObjectRegister(APIView):
         try:
             data = self.request.data
 
-            validator = BookObjectValidator(BookObject , BookClass)
-            validator.run()
+            # validator = BookObjectValidator(BookObject , BookClass)
+            # validator.run()
             
-            is_valid = validator.isvalid(data['code'] , data['book_class'] , data['date_published'] , data['published_no'])
+            # is_valid = validator.isvalid(data['code'] , data['book_class'] , data['date_published'] , data['published_no'])
 
            
             
             data['company'] =  find_library_admin(self.request.user.id).company.id
 
-            if not is_valid == True:
+            # if not is_valid == True:
 
-                return JsonResponse({"error":is_valid}, status = 400)
+            #     return JsonResponse({"error":is_valid}, status = 400)
 
             serializer = self.serializer_class(data = data)
 
@@ -220,6 +263,29 @@ class ObjectDelete(DestroyAPIView):
         return JsonResponse({"msg":"deleted!"})
        
 
+       
+class ObjectFind(ListAPIView):
+    
+    serializer_class = BookObjectGetSerializer
+
+    def get_queryset(self):
+        
+        query_params = self.request.GET
+
+        params = dict(query_params.lists())
+
+    
+        for k,v in list(params.items()):
+            if v[0] != '':
+                params[k] = v[0]
+            else:
+                params.pop(k)
+            
+        print(params.items())
+
+        return BookObject.objects.filter(**params)
+   
+    
 ###########################################################################################################################
 
 class UploadImage(CreateAPIView):
@@ -237,7 +303,9 @@ class UploadImage(CreateAPIView):
 
         data = request.data
 
-        data['book_object'] = self.get_object(code = data['book_object'] , company = self.request.user.company)
+        print(data['book_object'])
+
+        data['book_object'] = self.get_object(code = data['book_object'] , company = find_library_admin(request.user.id).company.id ).code
 
         serializer = self.serializer_class(data = data)
 
@@ -248,3 +316,9 @@ class UploadImage(CreateAPIView):
         return JsonResponse(serializer.data)
 
 
+class RecommendorTest(APIView):
+    def get(self , request):
+
+        df = test()
+
+        return df

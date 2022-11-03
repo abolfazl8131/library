@@ -33,7 +33,7 @@ class BookObject(models.Model):
     code = models.CharField(max_length = 102 , null = False , db_index = True , unique= True)
     date_published = models.DateField(default=None)
     published_no = models.SmallIntegerField(default=1)
-    book_class = models.ForeignKey(BookClass , on_delete = models.PROTECT)
+    book_class = models.ForeignKey(BookClass , on_delete = models.PROTECT , related_name = 'book_class')
     available = models.BooleanField(default=True)
     company = models.ForeignKey(Company , on_delete = models.CASCADE , null = True)
 
