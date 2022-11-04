@@ -8,10 +8,14 @@ from company.serializers import CompanySerializer
 class BookClassSerializer(serializers.ModelSerializer):
 
     genre = serializers.SlugRelatedField(queryset = BookGenre.objects.all() , slug_field='genre')
-    
+    image = serializers.FileField()
     class Meta:
         model = BookClass
-        fields = ['name' , 'genre' , 'authors' , 'quantity']
+        fields = ['name' , 'genre' , 'authors' , 'quantity','date_created','image']
+        extra_kwargs = {
+            'date_created': {'read_only': True}, 
+        }
+        
        
 ###################################################################################################################3
 class BookGenreSerializer(serializers.ModelSerializer):
@@ -19,11 +23,6 @@ class BookGenreSerializer(serializers.ModelSerializer):
         model = BookGenre
         fields = ['genre']
 
-class BookClassGetSerializer(serializers.ModelSerializer):
-    genre = BookGenreSerializer()
-    class Meta:
-        model = BookClass
-        fields = ['name' , 'genre' , 'authors' , 'quantity']
 
 #########################################################################################################
 class BookObjectSerializer(serializers.ModelSerializer):
@@ -34,11 +33,7 @@ class BookObjectSerializer(serializers.ModelSerializer):
 
 
 ##############################################################################################
-class BookClassNestedSerializer(serializers.ModelSerializer):
-    genre = BookGenreSerializer()
-    class Meta:
-        model = BookClass
-        fields = ['name' , 'genre' , 'authors']
+
 
 
 class NestedBookImageSerializer(serializers.ModelSerializer):
@@ -46,15 +41,6 @@ class NestedBookImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookImage
         fields = ['image']
-
-
-class BookObjectGetSerializer(serializers.ModelSerializer):
-    book_class = BookClassNestedSerializer()
-    object_image = NestedBookImageSerializer(many = True)
-    company = CompanySerializer()
-    class Meta:
-        model = BookObject
-        fields = ['code' , 'date_published' , 'published_no' , 'book_class' , 'available','object_image' , 'company']
 
 
 #######################################################################################################
@@ -69,4 +55,28 @@ class BookImageSerializer(serializers.ModelSerializer):
 
         fields = '__all__'
 
-       
+class BookClassNestedSerializer(serializers.ModelSerializer):
+    genre = BookGenreSerializer()
+    #image = BookImageSerializer()
+    class Meta:
+        model = BookClass
+        fields = ['name' , 'genre' , 'authors']
+
+
+class BookObjectGetSerializer(serializers.ModelSerializer):
+    book_class = BookClassNestedSerializer()
+    object_image = NestedBookImageSerializer(many = True)
+    company = CompanySerializer()
+    class Meta:
+        model = BookObject
+        fields = ['code' , 'date_published' , 'published_no' , 'book_class' , 'available','object_image' , 'company']
+
+class BookClassGetSerializer(serializers.ModelSerializer):
+    genre = BookGenreSerializer()
+    #book_class = BookClassNestedSerializer()
+    class Meta:
+        model = BookClass
+        fields = ['name' , 'genre' , 'authors' , 'quantity','date_created','image']  
+        extra_kwargs = {
+            'date_created': {'write_only': True}, 
+        }     

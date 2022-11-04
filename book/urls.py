@@ -9,7 +9,7 @@ from .views import (GenreRegister,
                GetBookClasses,
                ObjectRegister,
                GetBookObjectsWithSlug,
-               UploadImage,ObjectFind , RecommendorTest,FilterBookClassesWithCompany)
+               UploadImage,ObjectFind , RecommendorTest,FilterBookClassesWithCompany, AddImageToBookClass)
 
 urlpatterns = [
    path('genre/save/' , GenreRegister.as_view()),
@@ -19,6 +19,7 @@ urlpatterns = [
    path('class/filter/',FilterBookClassesWithCompany.as_view()),
    path('class/all/',GetBookClasses.as_view()),
    path('class/delete/' , ClassDelete.as_view()),
+   path('class/upload/image/',AddImageToBookClass.as_view()),
    path('object/save/' , ObjectRegister.as_view()),
    path('object/<str:name>', GetBookObjectsWithSlug.as_view()),
    path('object/delete/', ObjectDelete.as_view()),

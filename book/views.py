@@ -4,7 +4,7 @@ from requests import request
 from rest_framework.views import APIView
 from validator.book.book_validator import BookObjectValidator ,BookClassValidator , BookGenreVlidator
 from .models import BookGenre ,BookClass , BookObject
-from rest_framework.generics import DestroyAPIView, ListAPIView , CreateAPIView
+from rest_framework.generics import DestroyAPIView, ListAPIView , CreateAPIView,UpdateAPIView
 from .serializers import BookClassGetSerializer , BookClassSerializer , BookObjectGetSerializer , BookObjectSerializer , BookGenreSerializer, BookImageSerializer
 from shared_queries.get_all_objects import GetManagementObjects 
 from permissions.is_active import IsActive
@@ -85,25 +85,16 @@ class ClassRegister(CreateAPIView):
     #add
 
     def post(self , format = None):
-        try:
+       
             data = self.request.data
 
-            validator = BookClassValidator(BookClass , BookGenre)
-            validator.run()
-
-            
-            is_valid = validator.isvalid(data['name'] , data['genre'])
-
-            if not is_valid == True:
-
-                return JsonResponse({"error":is_valid}, status = 400)
-
             serializer = self.serializer_class(data = data)
-            serializer.is_valid()
+            serializer.is_valid(raise_exception=True)
             serializer.save()
+            print(serializer.data)
             return JsonResponse(serializer.data)
-        except Exception as e: 
-            raise e
+
+       
 
     
 
@@ -112,9 +103,9 @@ class FilterBookClassesWithCompany(ListAPIView):
     serializer_class = BookClassGetSerializer
 
     def get_queryset(self , **kwargs):
-       
-        return BookClass.objects.prefetch_related('book_class').filter(**kwargs)
-
+        
+        return BookClass.objects.order_by('date_created').prefetch_related('book_class')
+            
 
     @method_decorator(cache_page(CACHE_TTL))
     def get(self , request):
@@ -128,10 +119,9 @@ class FilterBookClassesWithCompany(ListAPIView):
                 params[k] = v[0]
             else:
                 params.pop(k)
-        print(params)
+        
 
         qs = self.get_queryset(**params)
-        print(qs)
 
         serialized_data = self.serializer_class(qs , many = True)
        
@@ -156,7 +146,7 @@ class GetBookClasses(ListAPIView):
                 qs = self.get_queryset(genre)
                 serializer = self.serializer_class(qs , many = True)
                 return JsonResponse({"data":serializer.data})
-            all_objects = BookClass.objects.all()
+            all_objects = BookClass.objects.order_by('date_created').all()
 
             serializer = self.serializer_class(all_objects , many = True)
             return JsonResponse({"data":serializer.data})
@@ -183,6 +173,22 @@ class ClassDelete(DestroyAPIView):
             return JsonResponse({"error":"we cant delete this class because the is a hard relation between this class and some book objects!"} , status = 400)
 
 
+class AddImageToBookClass(UpdateAPIView):
+    serializer_class = BookClassSerializer
+    def get_object(self , **kwargs):
+        return BookClass.objects.get(**kwargs)
+
+    def patch(self , request):
+       
+        name = request.GET.get('name')
+        qs = self.get_object(name = name )
+        qs.image = request.data['image']
+        qs.save()
+        return JsonResponse({"msg":"main photo changed!"})
+       
+            
+
+
 ##########################################################################################################################3
 
 
@@ -197,19 +203,8 @@ class ObjectRegister(CreateAPIView):
     def post(self , format = None):
         try:
             data = self.request.data
-
-            # validator = BookObjectValidator(BookObject , BookClass)
-            # validator.run()
-            
-            # is_valid = validator.isvalid(data['code'] , data['book_class'] , data['date_published'] , data['published_no'])
-
-           
             
             data['company'] =  find_library_admin(self.request.user.id).company.id
-
-            # if not is_valid == True:
-
-            #     return JsonResponse({"error":is_valid}, status = 400)
 
             serializer = self.serializer_class(data = data)
 

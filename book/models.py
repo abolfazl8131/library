@@ -2,6 +2,8 @@
 from django.db import models
 from company.models import Company
 # Create your models here.
+from datetime import date
+
 
 
 
@@ -15,8 +17,10 @@ class BookClass(models.Model):
     genre = models.ForeignKey(BookGenre , on_delete = models.PROTECT)
     authors = models.TextField(null = True)
     quantity = models.IntegerField(default=0)
-    
+    date_created = models.DateField(null=True,default = None )
+    image = models.FileField(upload_to = 'images', null=True)
 
+    
     def increase_quantity(self):
         self.quantity += 1
     
@@ -47,6 +51,7 @@ class BookObject(models.Model):
 class BookImage(models.Model):
     image = models.FileField(upload_to='images')
     book_object = models.ForeignKey(BookObject , on_delete=models.CASCADE , related_name='object_image')  
+    
 
     def __unicode__(self):
         return u"%s" % self.image
