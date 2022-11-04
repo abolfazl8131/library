@@ -80,3 +80,9 @@ class BookClassGetSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'date_created': {'write_only': True}, 
         }     
+
+
+class GetBookClassNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookClass
+        fields = ['name']

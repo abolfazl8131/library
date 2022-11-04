@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from validator.book.book_validator import BookObjectValidator ,BookClassValidator , BookGenreVlidator
 from .models import BookGenre ,BookClass , BookObject
 from rest_framework.generics import DestroyAPIView, ListAPIView , CreateAPIView,UpdateAPIView
-from .serializers import BookClassGetSerializer , BookClassSerializer , BookObjectGetSerializer , BookObjectSerializer , BookGenreSerializer, BookImageSerializer
+from .serializers import BookClassGetSerializer , BookClassSerializer , BookObjectGetSerializer , BookObjectSerializer , BookGenreSerializer, BookImageSerializer,GetBookClassNameSerializer
 from shared_queries.get_all_objects import GetManagementObjects 
 from permissions.is_active import IsActive
 from permissions.is_clerk import IsClerk
@@ -187,7 +187,9 @@ class AddImageToBookClass(UpdateAPIView):
         return JsonResponse({"msg":"main photo changed!"})
        
             
-
+class GetAllClassesName(ListAPIView):
+    queryset = BookClass.objects.all()
+    serializer_class = GetBookClassNameSerializer
 
 ##########################################################################################################################3
 
