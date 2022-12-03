@@ -10,7 +10,7 @@ services:
 
   web:
     build: .
-    command: sh -c "python3 manage.py runserver 0.0.0.0:8080 && python3 manage.py migrate "
+    command: sh -c "python3 manage.py runserver 0.0.0.0:8080 && python3 manage.py migrate"
     ports:
       - "8080:8080"
     volumes:

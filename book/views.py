@@ -104,7 +104,7 @@ class FilterBookClassesWithCompany(ListAPIView):
 
     def get_queryset(self , **kwargs):
         
-        return BookClass.objects.order_by('date_created').prefetch_related('book_class')
+        return BookClass.objects.order_by('date_created').prefetch_related('book_class').filter(**kwargs)
             
 
     @method_decorator(cache_page(CACHE_TTL))
@@ -120,7 +120,7 @@ class FilterBookClassesWithCompany(ListAPIView):
             else:
                 params.pop(k)
         
-
+        print(params)
         qs = self.get_queryset(**params)
 
         serialized_data = self.serializer_class(qs , many = True)
@@ -203,6 +203,7 @@ class ObjectRegister(CreateAPIView):
     permission_classes = permissons
 
     def post(self , format = None):
+        
         try:
             data = self.request.data
             
@@ -215,7 +216,9 @@ class ObjectRegister(CreateAPIView):
             serializer.save()
 
             return JsonResponse({"data":serializer.data})
+
         except Exception as e:
+
             raise e
 
 
@@ -246,9 +249,9 @@ class GetBookObjectsWithSlug(ListAPIView):
 
 
 class ObjectDelete(DestroyAPIView):
+
     permission_classes = permissons
     
-
     def get_queryset(self , **kwargs):
         return BookObject.objects.get(**kwargs)
 

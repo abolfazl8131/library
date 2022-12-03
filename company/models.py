@@ -10,5 +10,6 @@ class Company(models.Model):
     province = models.CharField(max_length=100, db_index = True)
     phone_num = models.CharField(max_length = 100)
     address = models.TextField()
+    is_active = models.BooleanField(default=False)
 
     

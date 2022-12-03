@@ -2,7 +2,7 @@
 
 FROM python:3.9.6
 
-RUN pip install --no-cache-dir numpy scipy pandas matplotlib
+RUN pip install --no-cache-dir numpy scipy pandas matplotlib django-resized
 
 # set work directory
 RUN mkdir /code
